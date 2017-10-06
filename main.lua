@@ -14,9 +14,11 @@ Game = {
 		h = love.graphics.getHeight()
 	},
 	font14 = love.graphics.newFont(14),
+	font40 = love.graphics.newFont(40),
 	font70 = love.graphics.newFont(70)
 }
 Game.font14:setFilter("nearest", "nearest", 0)
+Game.font40:setFilter("nearest", "nearest", 0)
 love.graphics.setFont(Game.font14)
 Game.font70:setFilter("nearest", "nearest", 0)
 Timer = require "lib.timer"	-- Timer (might be used in minigames)
@@ -86,10 +88,15 @@ end
 
 function postDraw()
 	if Game.paused then
-		love.graphics.setColor(255, 255, 255, 200)
+		love.graphics.setColor(220, 220, 220, 220)
 		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-		love.graphics.setColor(0, 0, 0)
-		love.graphics.print("Game paused! PAUSE to exit, ACTION to continue.", 100, 100)
+		love.graphics.setColor(30, 30, 30, 255)
+		love.graphics.setFont(Game.font40)
+		local l1 = "Game paused!"
+		local l2 = "PAUSE to exit. ACTION to resume."
+		love.graphics.print(l1, Game.original.w/2 - Game.font40:getWidth(l1)/2, Game.original.h/2 - 40)
+		love.graphics.setFont(Game.font14)
+		love.graphics.print(l2, Game.original.w/2 - Game.font14:getWidth(l2)/2, Game.original.h/2 + 20)
 	end
 	love.graphics.pop()
 end

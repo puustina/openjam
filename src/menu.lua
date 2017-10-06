@@ -2,7 +2,8 @@ local menu = {
 	minigameNames = {
 		"DiamondHeist",
 		"CavePainting",
-		"WalkTheDog"
+		"WalkTheDog",
+		"FaceSlap"
 	}
 }
 
@@ -22,7 +23,7 @@ function menu:keypressed(key, scancode, isRepeat)
 		until newGame ~= Game.lastGame
 		Game.lastGame = newGame
 		--Venus.switch(self.minigames[newGame])
-		Venus.switch(self.minigames["DiamondHeist"])
+		Venus.switch(self.minigames["FaceSlap"])
 	end
 end
 
