@@ -10,7 +10,8 @@ Controls = {
 	DOWN = "down",
 	LEFT = "left",
 	RIGHT = "right",
-	ACTION = "space"
+	ACTION = "space",
+	PAUSE = "escape"
 }
 
 -- Alternative control example:
@@ -20,6 +21,7 @@ Controls = {
 	DOWN = "s",
 	LEFT = "a",
 	RIGHT = "d",
-	ACTION = "k"
+	ACTION = "k",
+	PAUSE = "p"
 }
 ]]--

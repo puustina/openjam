@@ -15,7 +15,7 @@ end
 
 function menu:keypressed(key, scancode, isRepeat)
 	if Game.paused then return end
-	if (key == "return") then
+	if (key == Controls["ACTION"]) then
 		local newGame = ""
 		repeat 
 			newGame = self.minigameNames[math.random(1, #self.minigameNames)] 
