@@ -1,8 +1,9 @@
 local splash = {}
+local menu = require "src.menu"
 
 function splash:init()
 	self.timer = Timer.new()
-	self.timer:add(.1, function() Venus.switch(Menu) end)
+	self.timer:add(.1, function() Venus.switch(menu) end)
 end
 
 function splash:update(dt)

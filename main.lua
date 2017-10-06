@@ -6,7 +6,12 @@ Controls = {
 	RIGHT = "right",
 	ACTION = "space"
 }
-Menu = require "src.menu"	-- Menu-state (return from minigame)
+Game = {
+	result = "WIN",		-- minigame result (WIN|LOSE)
+	maxLives = 3,
+	curLives = 3,
+	speed = 1		-- speed/difficulty of minigames
+}
 Timer = require "lib.timer"	-- Timer (might be used in minigames)
 Venus = require "lib.venus"	-- Minigames & menu need to access this
 

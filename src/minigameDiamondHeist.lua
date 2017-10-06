@@ -1,3 +1,5 @@
+local results = require "src.results"
+
 local diamondHeist = {
 	name = "Diamond Heist",
 	description = "Avoid glass. Grab diamond.",
@@ -53,7 +55,7 @@ function diamondHeist:entering()
 		z = 0,
 		radius = 0.75 * self.holeRadius,
 		speed = 100,
-		zSpeed = 7.5
+		zSpeed = 2
 	}
 
 	self.glassPanes = {}
@@ -61,7 +63,7 @@ function diamondHeist:entering()
 		self.glassPanes[#self.glassPanes + 1] = {
 			x = math.random(self.holeRadius, sW - 2 * self.holeRadius),
 			y = math.random(self.holeRadius, sH - 2 * self.holeRadius),
-			z = 20 + i * 10
+			z = 10 + i * 5
 		}
 	end
 end
@@ -85,12 +87,14 @@ function diamondHeist:update(dt)
 		local pane = self.glassPanes[self.nextRing]
 		if (math.sqrt(math.pow(self.hand.x - pane.x, 2) + 
 		math.pow(self.hand.y - pane.y, 2)) > maxDistanceFromCenter) then
-			print("HIT!")
+			Game.result = "LOSE"
+			Venus.switch(results)
 		end
 
 		self.nextRing = self.nextRing + 1
 		if (self.nextRing > #self.glassPanes) then
-			Venus.switch(Menu)
+			Game.result = "WIN"
+			Venus.switch(results)
 		end
 	end
 end
