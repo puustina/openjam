@@ -21,7 +21,8 @@ function menu:keypressed(key, scancode, isRepeat)
 			newGame = self.minigameNames[math.random(1, #self.minigameNames)] 
 		until newGame ~= Game.lastGame
 		Game.lastGame = newGame
-		Venus.switch(self.minigames[newGame])
+		--Venus.switch(self.minigames[newGame])
+		Venus.switch(self.minigames["DiamondHeist"])
 	end
 end
 
@@ -30,6 +31,7 @@ function menu:update(dt)
 end
 
 function menu:draw()
+	love.graphics.setBackgroundColor(0, 0, 0)
 	preDraw()
 	local counter = 0
 	for i, j in pairs(self.minigames) do

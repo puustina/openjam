@@ -138,6 +138,7 @@ end
 
 function cavePainting:draw()
 	preDraw()
+	love.graphics.setBackgroundColor(0, 0, 0)
 	for i, j in pairs(self.wall) do
 		local color = self.PAINTINGS[j.index].c
 		color[#color + 1] = 100

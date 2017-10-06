@@ -12,8 +12,13 @@ Game = {
 	original = {
 		w = love.graphics.getWidth(),
 		h = love.graphics.getHeight()
-	}
+	},
+	font14 = love.graphics.newFont(14),
+	font70 = love.graphics.newFont(70)
 }
+Game.font14:setFilter("nearest", "nearest", 0)
+love.graphics.setFont(Game.font14)
+Game.font70:setFilter("nearest", "nearest", 0)
 Timer = require "lib.timer"	-- Timer (might be used in minigames)
 Venus = require "lib.venus"	-- Minigames & menu need to access this
 Venus.duration = 0.5

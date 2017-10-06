@@ -20,6 +20,7 @@ end
 
 function results:draw()
 	preDraw()
+	love.graphics.setBackgroundColor(0, 0, 0)
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.print(Game.result, 10, 10)
 	postDraw()

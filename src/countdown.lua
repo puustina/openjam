@@ -1,14 +1,14 @@
 local countdown = {
 	index = 1,
-	items = { "3", "2", "1", "GO" },
-	timerMax = 0.25,
-	timerCur = 0.25,
+	items = { "3", "2", "1", "GO!" },
+	timerMax = 0.5,
+	timerCur = 0.5,
 	count = false
 }
 
 function countdown:reset()
 	self.index = 1
-	self.timerCur = 0.45
+	self.timerCur = self.timerMax
 end
 
 function countdown:start()
@@ -31,8 +31,15 @@ function countdown:update(dt)
 end
 
 function countdown:draw()
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.print(self.items[self.index], 100, 100)
+	love.graphics.setFont(Game.font70)
+	local text = self.items[self.index]
+	local fH = Game.font70:getHeight()
+	local fW = Game.font70:getWidth(text)
+	love.graphics.setColor(50, 50, 50)
+	love.graphics.rectangle("fill", 0, Game.original.h/2 - fH/2, Game.original.w, fH)
+	love.graphics.setColor(200, 200, 200)
+	love.graphics.print(text, Game.original.w/2 - fW/2, Game.original.h/2 - fH/2)
+	love.graphics.setFont(Game.font14)
 end
 
 return countdown

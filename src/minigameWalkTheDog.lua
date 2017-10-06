@@ -32,6 +32,7 @@ end
 
 function walkTheDog:draw()
 	preDraw()
+	love.graphics.setBackgroundColor(0, 0, 0)
 	love.graphics.print("Walk the Dog - not implemented - You win!", 10, 10)
 	if not countdown:over() then countdown:draw() end
 	postDraw()
