@@ -7,7 +7,7 @@ Controls = {
 	ACTION = "space"
 }
 Game = {
-	result = "WIN",		-- minigame result (WIN|LOSE)
+	result = "",		-- minigame result (WIN|LOSE|"")
 	maxLives = 3,
 	curLives = 3,
 	speed = 1		-- speed/difficulty of minigames

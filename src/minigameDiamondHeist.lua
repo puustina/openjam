@@ -61,8 +61,8 @@ function diamondHeist:entering()
 	self.glassPanes = {}
 	for i = 1, 10 do
 		self.glassPanes[#self.glassPanes + 1] = {
-			x = math.random(self.holeRadius, sW - 2 * self.holeRadius),
-			y = math.random(self.holeRadius, sH - 2 * self.holeRadius),
+			x = math.random(self.holeRadius, sW - self.holeRadius),
+			y = math.random(self.holeRadius, sH - self.holeRadius),
 			z = 10 + i * 5
 		}
 	end

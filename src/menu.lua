@@ -15,7 +15,7 @@ end
 
 function menu:keypressed(key, scancode, isRepeat)
 	if (key == "return") then
-		Venus.switch(self.minigames["DiamondHeist"])
+		Venus.switch(self.minigames["CavePainting"])
 	end
 end
 

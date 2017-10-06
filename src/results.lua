@@ -10,6 +10,10 @@ function results:entered()
 	self.timer:add(2, function() Venus.switch(menu) end)
 end
 
+function results:left()
+	Game.result = ""
+end
+
 function results:update(dt)
 	self.timer:update(dt)	
 end
