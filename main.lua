@@ -1,11 +1,5 @@
 -- Global variables:
-Controls = {
-	UP = "up",
-	DOWN = "down",
-	LEFT = "left",
-	RIGHT = "right",
-	ACTION = "space"
-}
+require "controls"
 Game = {
 	paused = false,
 	result = "",		-- minigame result (WIN|LOSE|"")
