@@ -1,4 +1,5 @@
 local results = require "src.results"
+local countdown = require "src.countdown"
 
 local diamondHeist = {
 	name = "Diamond Heist",
@@ -45,6 +46,8 @@ function diamondHeist:init()
 end
 
 function diamondHeist:entering()
+	countdown:reset()
+	countdown:start()
 	self.hasControl = false
 	self.nextRing = 1
 
@@ -68,11 +71,16 @@ function diamondHeist:entering()
 end
 
 function diamondHeist:entered()
-	self.hasControl = true
 end
 
 function diamondHeist:update(dt)	
 	if Game.paused then return end
+	if not countdown:over() then
+		countdown:update(dt)
+		return
+	else
+		self.hasControl = true
+	end
 	self.hand.z = self.hand.z + self.hand.zSpeed * dt
 
 	for i, j in pairs(bindings) do
@@ -113,6 +121,7 @@ function diamondHeist:draw()
 
 	love.graphics.setColor(100, 0, 0, 150)
 	love.graphics.circle("fill", self.hand.x, self.hand.y, self.hand.radius)
+	if not countdown:over() then countdown:draw() end
 	postDraw()
 end
 

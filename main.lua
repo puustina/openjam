@@ -26,7 +26,6 @@ function love.load()
 end
 
 function love.keypressed(key, scancode, isRepeat)
-	print("main")
 	local setScale = function() 
 		Game.cooldown = true
 		love.window.setMode(Game.original.w * Game.scale, Game.original.h * Game.scale)

@@ -1,5 +1,4 @@
 local menu = require "src.menu"
-
 local results = {}
 
 function results:init()

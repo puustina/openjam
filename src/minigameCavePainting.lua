@@ -1,4 +1,5 @@
 local results = require "src.results"
+local countdown = require "src.countdown"
 
 local cavePainting = {
 	name = "Cave Painting",
@@ -72,6 +73,8 @@ function cavePainting:init()
 end
 
 function cavePainting:entering()
+	countdown:reset()
+	countdown:start()
 	self.timeLeft = self.timeLimit
 
 	-- Painting queue
@@ -98,11 +101,10 @@ function cavePainting:entering()
 end
 
 function cavePainting:entered()
-	self.hasControl = true
 end
 
 function cavePainting:keypressed(key, scancode, isRepeat)
-	if Game.paused then return end
+	if Game.paused or not countdown:over() then return end
 	if (key == Controls["ACTION"] and not isRepeat) then
 		bindings["ACTION"](self)
 	end
@@ -110,6 +112,12 @@ end
 
 function cavePainting:update(dt)
 	if Game.paused then return end
+	if not countdown:over() then
+		countdown:update(dt)
+		return
+	else
+		self.hasControl = true
+	end
 	if self.hasControl then
 		self.timeLeft = self.timeLeft - dt
 
@@ -149,6 +157,7 @@ function cavePainting:draw()
 
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.rectangle("fill", 0, Game.original.h - 10, Game.original.w * (self.timeLeft/self.timeLimit), 10) 
+	if not countdown:over() then countdown:draw() end
 	postDraw()
 end
 
