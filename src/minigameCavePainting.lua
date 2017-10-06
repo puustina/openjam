@@ -31,8 +31,8 @@ local bindings = {
 		if (minigame.curPainting.index > #minigame.paintings) then return end 
 		local r = minigame.PAINTINGS[minigame.paintings[minigame.curPainting.index] ].r
 		minigame.curPainting.y = minigame.curPainting.y + minigame.speed * dt
-		if (minigame.curPainting.y + r > love.graphics.getHeight()) then
-			minigame.curPainting.y = love.graphics.getHeight() - r
+		if (minigame.curPainting.y + r > Game.original.h) then
+			minigame.curPainting.y = Game.original.h - r
 		end
 	end,
 	LEFT = function(minigame, dt)
@@ -49,8 +49,8 @@ local bindings = {
 		if (minigame.curPainting.index > #minigame.paintings) then return end 
 		local r = minigame.PAINTINGS[minigame.paintings[minigame.curPainting.index] ].r
 		minigame.curPainting.x = minigame.curPainting.x + minigame.speed * dt
-		if (minigame.curPainting.x + r > love.graphics.getWidth()) then
-			minigame.curPainting.x = love.graphics.getWidth() - r
+		if (minigame.curPainting.x + r > Game.original.w) then
+			minigame.curPainting.x = Game.original.w - r
 		end
 	end,
 	ACTION = function(minigame)
@@ -73,7 +73,6 @@ end
 
 function cavePainting:entering()
 	self.timeLeft = self.timeLimit
-	local w, h = love.graphics.getDimensions()
 
 	-- Painting queue
 	self.paintings = {
@@ -81,8 +80,8 @@ function cavePainting:entering()
 	}
 	self.curPainting = {
 		index = 1,
-		x = w/2,
-		y = h/2
+		x = Game.original.w/2,
+		y = Game.original.h/2
 	}
 
 	-- Paint the wall based on the queue
@@ -91,8 +90,8 @@ function cavePainting:entering()
 		local r = self.PAINTINGS[j].r
 		self.wall[#self.wall + 1] = {
 			index = j,
-			x = math.random(r, w - r),
-			y = math.random(r, h - r)
+			x = math.random(r, Game.original.w - r),
+			y = math.random(r, Game.original.h - r)
 		}
 	end
 	self.paintWall = {}
@@ -103,12 +102,14 @@ function cavePainting:entered()
 end
 
 function cavePainting:keypressed(key, scancode, isRepeat)
+	if Game.paused then return end
 	if (key == Controls["ACTION"] and not isRepeat) then
 		bindings["ACTION"](self)
 	end
 end
 
 function cavePainting:update(dt)
+	if Game.paused then return end
 	if self.hasControl then
 		self.timeLeft = self.timeLeft - dt
 
@@ -128,6 +129,7 @@ function cavePainting:update(dt)
 end
 
 function cavePainting:draw()
+	preDraw()
 	for i, j in pairs(self.wall) do
 		local color = self.PAINTINGS[j.index].c
 		color[#color + 1] = 100
@@ -146,8 +148,8 @@ function cavePainting:draw()
 	end
 
 	love.graphics.setColor(255, 255, 255)
-	local w, h = love.graphics.getDimensions()
-	love.graphics.rectangle("fill", 0, h - 10, w * (self.timeLeft/self.timeLimit), 10) 
+	love.graphics.rectangle("fill", 0, Game.original.h - 10, Game.original.w * (self.timeLeft/self.timeLimit), 10) 
+	postDraw()
 end
 
 return cavePainting

@@ -10,7 +10,9 @@ Menu:
 -- Transitions	[]
 - Settings
 -- Audio volume []
--- Screen scale []
+--- ctrl + +&-
+-- Screen scale [x]
+--- +&-
 - BG graphic	[]
 - icons		[]
 - audio
@@ -60,6 +62,11 @@ Minigames:
 -- Audio	[]
 -- scaling + balance []
 - Biker
+-- Prototype	[]
+-- Graphics	[]
+-- Audio	[]
+-- scaling + balance []
+- Leave a Mark
 -- Prototype	[]
 -- Graphics	[]
 -- Audio	[]

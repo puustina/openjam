@@ -15,12 +15,15 @@ function results:left()
 end
 
 function results:update(dt)
+	if Game.paused then return end
 	self.timer:update(dt)	
 end
 
 function results:draw()
+	preDraw()
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.print(Game.result, 10, 10)
+	postDraw()
 end
 
 return results

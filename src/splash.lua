@@ -11,7 +11,10 @@ function splash:update(dt)
 end
 
 function splash:draw()
+	preDraw()
+	love.graphics.setColor(255, 255, 255)
 	love.graphics.print("SPLASH!", 10, 10)
+	postDraw()
 end
 
 return splash
