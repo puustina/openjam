@@ -1,0 +1,67 @@
+Splash:
+- Graphic	[]
+
+Menu:
+- Free play	[]
+-- Select game	[]
+-- Game settings[]
+- Endurance	[]
+-- Start button []
+-- Transitions	[]
+- Settings
+-- Audio volume []
+-- Screen scale []
+- BG graphic	[]
+- icons		[]
+- audio
+-- song		[]
+-- sfx		[]
+
+Results:
+- Lifeloss	[]
+- Win results
+-- Speedup	[]
+- Graphics	[]
+- Audio		[]
+
+Transition screen (or merge with results/menu?)
+
+Gameover:
+- Stats		[]
+- Graphics
+-- Background	[]
+- Audio
+-- Music	[]
+
+Minigames:
+- Diamondheist:
+-- Prototype 	[x]
+-- Graphics 	[]
+-- Audio 	[]
+-- scaling + balance []
+- Cavepainting:
+-- Prototype	[x]
+-- Graphics	[]
+-- scaling + balance []
+-- Audio	[]
+- Walk the Dog
+-- Prototype	[]
+-- Graphics	[]
+-- Audio	[]
+-- scaling + balance []
+- Faceslap
+-- Prototype	[]
+-- Graphics	[]
+-- Audio	[]
+-- scaling + balance []
+- Beach walk
+-- Prototype	[]
+-- Graphics	[]
+-- Audio	[]
+-- scaling + balance []
+- Biker
+-- Prototype	[]
+-- Graphics	[]
+-- Audio	[]
+-- scaling + balance []
+- more games	[]
