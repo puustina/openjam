@@ -23,7 +23,7 @@ function menu:keypressed(key, scancode, isRepeat)
 		until newGame ~= Game.lastGame
 		Game.lastGame = newGame
 		--Venus.switch(self.minigames[newGame])
-		Venus.switch(self.minigames["FaceSlap"])
+		Venus.switch(self.minigames["CavePainting"])
 	end
 end
 
