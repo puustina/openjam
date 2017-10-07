@@ -5,7 +5,9 @@ local walkTheDog = {
 	name = "Walk the Dog",
 	description = "Mark the fireposts.",
 	controls = "ACTION",
-	thumbnail = nil
+	thumbnail = nil,
+	-- game specific
+	over = false
 }
 
 function walkTheDog:init()

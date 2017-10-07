@@ -1,17 +1,19 @@
+UNKO - UNnamed KOllection of minigames inspired by an image search for "leave a mark"
+
 Pause:
-- Graphic	[]
+- Graphic	[x?]
 - Functionality [x]
 
 Splash:
 - Graphic	[]
 
 Menu:
-- Free play	[]
--- Select game	[]
--- Game settings[]
-- Endurance	[]
--- Start button []
--- Transitions	[]
+- Free play	[x]
+-- Select game	[x]
+-- Game settings[x]
+- Endurance	[x]
+-- Start button [x]
+-- Transitions	[x]
 - Settings
 -- Audio volume []
 --- ctrl + +&-
@@ -47,7 +49,7 @@ Minigames:
 -- scaling + balance []
 - Cavepainting:
 -- Prototype	[x]
--- Graphics	[]
+-- Graphics	[x]
 -- scaling + balance []
 -- Audio	[]
 - Walk the Dog
@@ -61,8 +63,8 @@ Minigames:
 -- Audio	[]
 -- scaling + balance []
 - Beach walk
--- Prototype	[]
--- Graphics	[]
+-- Prototype	[x]
+-- Graphics	[x]
 -- Audio	[]
 -- scaling + balance []
 - Biker
@@ -70,7 +72,7 @@ Minigames:
 -- Graphics	[]
 -- Audio	[]
 -- scaling + balance []
-- Leave a Mark
+- Leave Mark
 -- Prototype	[]
 -- Graphics	[]
 -- Audio	[]

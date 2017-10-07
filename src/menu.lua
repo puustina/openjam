@@ -3,6 +3,7 @@ local RIGHT = Game.original.w
 local UP = -Game.original.h
 local DOWN = Game.original.h
 local SHOW = 0
+local DELAY = 0.15
 local lvl2MenuBG = function()
 	love.graphics.setColor(50, 50, 50, 100)
 	love.graphics.rectangle("fill", 0, 0, Game.original.w, Game.original.h)
@@ -46,7 +47,8 @@ local menu = {
 		"DiamondHeist",
 		"CavePainting",
 		"WalkTheDog",
-		"FaceSlap"
+		"FaceSlap",
+		"BeachWalk"
 	},
 	structure = {
 		[-3] = { -- secret
@@ -141,9 +143,9 @@ local bindingsEvent = {
 			stateSwitch("FP", menu.minigameNames[menu.structure[-1].index]) 
 		else
 			if (menu.screen > 0) then
-				menu.timer:tween(0.2, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
+				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
 			end
-			menu.timer:tween(0.2, menu.structure[menu.screen - 1], { pos = SHOW }, "in-out-quad")
+			menu.timer:tween(DELAY, menu.structure[menu.screen - 1], { pos = SHOW }, "in-out-quad")
 		end
 		menu.screen = math.max(-2, menu.screen - 1)
 	end,
@@ -154,17 +156,17 @@ local bindingsEvent = {
 			stateSwitch("END", menu.minigameNames[menu.structure[-1].index]) 
 		else
 			if (menu.screen < 0) then 
-				menu.timer:tween(0.2, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
+				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
 			end
-			menu.timer:tween(0.2, menu.structure[menu.screen + 1], { pos = SHOW }, "in-out-quad")
+			menu.timer:tween(DELAY, menu.structure[menu.screen + 1], { pos = SHOW }, "in-out-quad")
 		end
 		menu.screen = math.min(2, menu.screen + 1)
 	end,
 	UP = function(menu)
 		if (menu.screen == 0 or menu.screen == 3) then
-			menu.timer:tween(0.2, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
+			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
 			menu.screen = menu.screen - 3
-			menu.timer:tween(0.2, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
+			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
 		elseif (menu.screen == 1) then
 			local l = menu.structure[menu.screen].lives
 			menu.structure[menu.screen].lives = math.min(10, l + 1)
@@ -176,9 +178,9 @@ local bindingsEvent = {
 	end,
 	DOWN = function(menu)
 		if (menu.screen == 0 or menu.screen == -3) then
-			menu.timer:tween(0.2, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
+			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
 			menu.screen = menu.screen + 3
-			menu.timer:tween(0.2, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
+			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
 		elseif (menu.screen == 3) then
 			love.event.quit()
 		elseif (menu.screen == 1) then
