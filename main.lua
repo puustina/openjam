@@ -1,5 +1,14 @@
 -- Global variables:
 require "controls"
+
+drawMinigameInfo = function(mg)
+	love.graphics.setFont(Game.font14)
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.print(mg.name, 50, 100)
+	love.graphics.print(mg.description, 60, 120)
+	love.graphics.print(mg.controls, 60, 140)
+end
+
 Game = {
 	paused = false,
 	pauseEnd = false,
@@ -8,6 +17,11 @@ Game = {
 	maxLives = 3,
 	curLives = 3,
 	speed = 1,		-- speed/difficulty of minigames
+	maxSpeed = 2,
+	minSpeed = 0.5,
+	multi = 1.1,
+	minigamesWon = 0,
+	minigameStreak = 0,
 	scale = 1,
 	volume = 1,
 	original = {
@@ -16,7 +30,15 @@ Game = {
 	},
 	font14 = love.graphics.newFont(14),
 	font40 = love.graphics.newFont(40),
-	font70 = love.graphics.newFont(70)
+	font70 = love.graphics.newFont(70),
+	minigameNames = {
+		"DiamondHeist",
+		"CavePainting",
+		"WalkTheDog",
+		"FaceSlap",
+		"BeachWalk",
+		"ShitPants"
+	}
 }
 Game.font14:setFilter("nearest", "nearest", 0)
 Game.font40:setFilter("nearest", "nearest", 0)
@@ -29,6 +51,10 @@ Venus.duration = 0.5
 local splash = require "src.splash"
 
 function love.load()
+	Game.minigames = {}
+	for i, j in ipairs(Game.minigameNames) do
+		Game.minigames[j] = require ("src.minigame"..j)
+	end
 	Venus.registerEvents()
 	Venus.switch(splash)
 end

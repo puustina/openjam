@@ -1,3 +1,5 @@
+local gameRoulette = require "src.gameRoulette"
+
 local LEFT = -Game.original.w
 local RIGHT = Game.original.w
 local UP = -Game.original.h
@@ -5,13 +7,13 @@ local DOWN = Game.original.h
 local SHOW = 0
 local DELAY = 0.15
 local lvl2MenuBG = function()
-	love.graphics.setColor(50, 50, 50, 100)
+	love.graphics.setColor(50, 50, 50, 200)
 	love.graphics.rectangle("fill", 0, 0, Game.original.w, Game.original.h)
 	love.graphics.setColor(100, 100, 100)
 	love.graphics.rectangle("fill", 20, 20, Game.original.w - 40, Game.original.h - 40)
 end
 local lvl1MenuBG = function()
-	love.graphics.setColor(50, 50, 50, 100)
+	love.graphics.setColor(50, 50, 50, 200)
 	love.graphics.rectangle("fill", 0, 0, Game.original.w, Game.original.h)
 	love.graphics.setColor(150, 150, 150)
 	love.graphics.rectangle("fill", 10, 10, Game.original.w - 20, Game.original.h - 20)
@@ -43,14 +45,6 @@ local drawInstructions = function(inst, menuLVL)
 	end
 end
 local menu = {
-	minigameNames = {
-		"DiamondHeist",
-		"CavePainting",
-		"WalkTheDog",
-		"FaceSlap",
-		"BeachWalk",
-		"ShitPants"
-	},
 	structure = {
 		[-3] = { -- secret
 			origPos = UP,
@@ -82,9 +76,7 @@ local menu = {
 			draw = function(self, menu)
 				lvl1MenuBG()
 				drawInstructions({ LEFT = "Next", RIGHT = "Back", UP = "Select game", DOWN = "Select game" }, 1)
-				love.graphics.setFont(Game.font14)
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.print(menu.minigameNames[self.index], 10, 30)
+				drawMinigameInfo(Game.minigames[Game.minigameNames[self.index] ])
 			end	
 		},
 		[0] = { -- main screen
@@ -131,17 +123,13 @@ local menu = {
 	timer = Timer.new()
 }
 
-local stateSwitch = function(m, s)
-	Game.mode = m
-	Venus.switch(menu.minigames[s])
-end
-
 local bindingsEvent = {
 	LEFT = function(menu)
 		if math.abs(menu.screen) == 3 then return end
 		if menu.screen - 1 < -2 then 
+			Game.mode = "FP"
 			Game.speed = menu.structure[-2].speed
-			stateSwitch("FP", menu.minigameNames[menu.structure[-1].index]) 
+			Venus.switch(Game.minigames[Game.minigameNames[menu.structure[-1].index] ])
 		else
 			if (menu.screen > 0) then
 				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
@@ -153,8 +141,11 @@ local bindingsEvent = {
 	RIGHT = function(menu)
 		if math.abs(menu.screen) == 3 then return end
 		if menu.screen + 1 > 2 then 
+			Game.mode = "END"
 			Game.speed = menu.structure[2].speed
-			stateSwitch("END", menu.minigameNames[menu.structure[-1].index]) 
+			Game.maxLives = menu.structure[1].lives
+			Game.curLives = Game.maxLives
+			Venus.switch(gameRoulette)
 		else
 			if (menu.screen < 0) then 
 				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
@@ -170,10 +161,10 @@ local bindingsEvent = {
 			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
 		elseif (menu.screen == 1) then
 			local l = menu.structure[menu.screen].lives
-			menu.structure[menu.screen].lives = math.min(10, l + 1)
+			menu.structure[menu.screen].lives = math.min(Game.maxSpeed, l + 1)
 		elseif (menu.screen == -1) then
 			local i = menu.structure[menu.screen].index - 1
-			if i < 1 then i = i + #menu.minigameNames end
+			if i < 1 then i = i + #Game.minigameNames end
 			menu.structure[menu.screen].index = i
 		end
 	end,
@@ -189,7 +180,7 @@ local bindingsEvent = {
 			menu.structure[menu.screen].lives = math.max(1, l - 1)
 		elseif (menu.screen == -1) then
 			local i = menu.structure[menu.screen].index + 1
-			if i > #menu.minigameNames then i = i - #menu.minigameNames end
+			if i > #Game.minigameNames then i = i - #Game.minigameNames end
 			menu.structure[menu.screen].index = i
 		end
 	end
@@ -199,22 +190,18 @@ local bindingsUpdate = {
 	UP = function(menu, dt)
 		if (math.abs(menu.screen) == 2) then
 			local s = menu.structure[menu.screen].speed
-			menu.structure[menu.screen].speed = math.min(10, s + dt)
+			menu.structure[menu.screen].speed = math.min(Game.maxSpeed, s + dt)
 		end
 	end,
 	DOWN = function(menu, dt)
 		if (math.abs(menu.screen) == 2) then
 			local s = menu.structure[menu.screen].speed
-			menu.structure[menu.screen].speed = math.max(0.5, s - dt)
+			menu.structure[menu.screen].speed = math.max(Game.minSpeed, s - dt)
 		end
 	end
 }
 
 function menu:init()
-	self.minigames = {}
-	for i, j in ipairs(self.minigameNames) do
-		self.minigames[j] = require ("src.minigame"..j)
-	end
 end
 
 function menu:entering()
@@ -229,16 +216,6 @@ function menu:keypressed(key, scancode, isRepeat)
 	for i, j in pairs(Controls) do
 		if j == key and bindingsEvent[i] then bindingsEvent[i](self) end
 	end
-	--[[
-	if (key == Controls["ACTION"]) then
-		local newGame = ""
-		repeat 
-			newGame = self.minigameNames[math.random(1, #self.minigameNames)] 
-		until newGame ~= Game.lastGame
-		Game.lastGame = newGame
-		--Venus.switch(self.minigames[newGame])
-		Venus.switch(self.minigames["CavePainting"])
-	end]]--
 end
 
 function menu:update(dt)

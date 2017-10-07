@@ -26,16 +26,16 @@ Menu:
 -- sfx		[]
 
 Results:
-- Lifeloss	[]
+- Lifeloss	[x]
 - Win results
--- Speedup	[]
+-- Speedup	[x]
 - Graphics	[]
 - Audio		[]
 
 Transition screen (or merge with results/menu?)
 
 Gameover:
-- Stats		[]
+- Stats		[x]
 - Graphics
 -- Background	[]
 - Audio
@@ -77,4 +77,6 @@ Minigames:
 -- Graphics	[]
 -- Audio	[]
 -- scaling + balance []
+- Skidmarks
+-- Audio	[]
 - more games	[]
