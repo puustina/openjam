@@ -48,7 +48,8 @@ local menu = {
 		"CavePainting",
 		"WalkTheDog",
 		"FaceSlap",
-		"BeachWalk"
+		"BeachWalk",
+		"ShitPants"
 	},
 	structure = {
 		[-3] = { -- secret
