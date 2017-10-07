@@ -121,9 +121,11 @@ function postDraw()
 		love.graphics.setFont(Game.font40)
 		local l1 = "Game paused!"
 		local l2 = "PAUSE to exit. ACTION to resume."
-		love.graphics.print(l1, Game.original.w/2 - Game.font40:getWidth(l1)/2, Game.original.h/2 - 40)
+		love.graphics.print(l1, math.floor(Game.original.w/2 - Game.font40:getWidth(l1)/2), 
+			math.floor(Game.original.h/2 - 40))
 		love.graphics.setFont(Game.font14)
-		love.graphics.print(l2, Game.original.w/2 - Game.font14:getWidth(l2)/2, Game.original.h/2 + 20)
+		love.graphics.print(l2, math.floor(Game.original.w/2 - Game.font14:getWidth(l2)/2), 
+			math.floor(Game.original.h/2 + 20))
 	end
 	love.graphics.pop()
 end

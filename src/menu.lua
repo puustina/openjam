@@ -41,7 +41,7 @@ local drawInstructions = function(inst, menuLVL)
 		}
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.setFont(Game.font14)
-		love.graphics.print(j, pos[i][1], pos[i][2])
+		love.graphics.print(j, math.floor(pos[i][1]), math.floor(pos[i][2]))
 	end
 end
 local menu = {

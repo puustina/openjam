@@ -38,7 +38,7 @@ function countdown:draw()
 	love.graphics.setColor(50, 50, 50)
 	love.graphics.rectangle("fill", 0, Game.original.h/2 - fH/2, Game.original.w, fH)
 	love.graphics.setColor(200, 200, 200)
-	love.graphics.print(text, Game.original.w/2 - fW/2, Game.original.h/2 - fH/2)
+	love.graphics.print(text, math.floor(Game.original.w/2 - fW/2), math.floor(Game.original.h/2 - fH/2))
 	love.graphics.setFont(Game.font14)
 end
 

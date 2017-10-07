@@ -211,13 +211,15 @@ function cavePainting:draw()
 		painting.anim:draw(painting.img, self.curPainting.x, self.curPainting.y, 0, 1, 1, painting.r, painting.r)
 	end
 
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.rectangle("fill", 0, Game.original.h - 10, Game.original.w * (self.timeLeft/self.timeLimit), 10) 
+	love.graphics.setColor(50, 50, 50)
 	love.graphics.rectangle("fill", 0, 0, Game.original.w, 10)
+	love.graphics.rectangle("fill", 0, Game.original.h - 10, Game.original.w, 10)
+	love.graphics.setColor(150, 150, 150)
+	love.graphics.rectangle("fill", 0, Game.original.h - 10, Game.original.w * (self.timeLeft/self.timeLimit), 10) 
 	if self.success < 0 then
-		love.graphics.setColor(200, 0, 0)
+		love.graphics.setColor(200, 0, 0, 150)
 	else
-		love.graphics.setColor(0, 200, 0)
+		love.graphics.setColor(0, 200, 0, 150)
 	end
 	love.graphics.rectangle("fill", Game.original.w * 0.5, 0, Game.original.w * 0.5 * (self.success/5), 10)
 	if not countdown:over() then countdown:draw() end

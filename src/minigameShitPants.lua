@@ -97,7 +97,7 @@ function shitPants:draw()
 	-- sign
 	love.graphics.setColor(10, 10, 10)
 	love.graphics.setFont(Game.font14)
-	love.graphics.print("WC", Game.original.w/2, wall * Game.original.h - 0.75 * h, 0, 
+	love.graphics.print("WC", math.floor(Game.original.w/2), math.floor(wall * Game.original.h - 0.75 * h), 0, 
 		scale, scale, Game.font14:getWidth("WC")/2, Game.font14:getHeight()/2)
 	-- floor
 	love.graphics.setColor(189, 184, 140)
