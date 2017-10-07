@@ -3,6 +3,7 @@ require "controls"
 Game = {
 	paused = false,
 	pauseEnd = false,
+	mode = "",		-- game mode (FP|END|"")
 	result = "",		-- minigame result (WIN|LOSE|"")
 	maxLives = 3,
 	curLives = 3,
