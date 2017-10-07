@@ -9,7 +9,8 @@ local diamondHeist = {
 	thumbnail = nil,
 	-- game specific
 	hasControl = false,
-	diamondPic = love.graphics.newImage("assets/diamondHeist/diamond.png")
+	diamondPic = love.graphics.newImage("assets/diamondHeist/diamond.png"),
+	canvas = love.graphics.newCanvas(Game.original.w, Game.original.h)
 }
 diamondHeist.diamondAnim = anim8.newAnimation(anim8.newGrid(160, 160, 7*160, 160)('1-7', 1), 0.1) 
 
@@ -46,6 +47,7 @@ local bindings = {
 
 function diamondHeist:init()
 	self.holeRadius = 90
+	self.timer = Timer.new()
 end
 
 function diamondHeist:entering()
@@ -82,6 +84,7 @@ end
 function diamondHeist:update(dt)	
 	self.diamondAnim:update(dt)
 	self.hand.anim:update(dt)
+	self.timer:update(dt)
 	if Game.paused or self.over then return end
 	if not countdown:over() then
 		countdown:update(dt)
@@ -107,7 +110,7 @@ function diamondHeist:update(dt)
 			Game.result = "LOSE"
 			self.hand.z = pane.z - 0.01
 			self.over = true
-			Venus.switch(results)
+			self.timer:add(1, function() Venus.switch(results) end)
 		end
 
 		self.nextRing = self.nextRing + 1
@@ -115,7 +118,7 @@ function diamondHeist:update(dt)
 			Game.result = "WIN"
 			self.hand.z = pane.z - 0.01
 			self.over = true
-			Venus.switch(results)
+			self.timer:add(2, function() Venus.switch(results) end)
 		end
 	end
 end
@@ -142,28 +145,33 @@ function diamondHeist:draw()
 	end
 	for i = #self.glassPanes, 1, -1 do
 		local j = self.glassPanes[i]
-		if (j.z > self.hand.z) then
+		if (j.z - self.hand.z > -0.5) then
 			local scale = 1/(j.z - self.hand.z + 1)
 			if (i == #self.glassPanes) then 
 				love.graphics.setColor(255, 255, 255)
 				self.diamondAnim:draw(self.diamondPic, j.x, j.y, 0, scale, scale, 80, 80)
 			else
-				if (i == self.nextRing) then
-					love.graphics.setColor(225, 225, 225, 150)
-					love.graphics.rectangle("fill", 0, 0, Game.original.w, Game.original.h)
-					love.graphics.setColor(100, 100, 100, 255)
-					love.graphics.setBlendMode("add")
+				self.canvas:renderTo(function()
+					love.graphics.clear(170, 170, 170, 150)
+					love.graphics.setColor(1, 1, 1, 0)
+					love.graphics.setBlendMode("multiply")
 					love.graphics.circle("fill", j.x, j.y, scale * self.holeRadius)
-				end
+					love.graphics.setBlendMode("alpha")
+					love.graphics.setColor(0, 0, 0)
+					love.graphics.circle("line", j.x, j.y, scale * self.holeRadius)
+				end)
+				love.graphics.setBlendMode("alpha", "premultiplied")
+				love.graphics.setColor(255, 255, 255)
+				love.graphics.draw(self.canvas, 0, 0)
 				love.graphics.setBlendMode("alpha")
-				love.graphics.setColor(0, 0, 0)
-				love.graphics.circle("line", j.x, j.y, scale * self.holeRadius)
 			end
 		end
 	end
 
-	love.graphics.setColor(255, 255, 255, 200)
-	self.hand.anim:draw(self.hand.img, self.hand.x, self.hand.y, 0, 1, 1, self.hand.radius, self.hand.radius)
+	if not self.over or Game.result == "LOSE" then
+		love.graphics.setColor(255, 255, 255, 200)
+		self.hand.anim:draw(self.hand.img, self.hand.x, self.hand.y, 0, 1, 1, self.hand.radius, self.hand.radius)
+	end
 	if not countdown:over() then countdown:draw() end
 	postDraw()
 end
