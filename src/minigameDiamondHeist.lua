@@ -125,6 +125,7 @@ end
 
 function diamondHeist:draw()
 	preDraw()
+	love.graphics.setLineWidth(1)
 	love.graphics.setBackgroundColor(222, 222, 222)
 	local diamond = self.glassPanes[#self.glassPanes]
 	local scale = 1/(diamond.z - self.hand.z + 1)
