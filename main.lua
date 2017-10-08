@@ -53,7 +53,10 @@ Game = {
 		"ShitPants",
 		"HighFive"
 	},
-	fadeDuration = 0.5
+	fadeDuration = 0.5,
+	sources = {
+
+	}
 }
 love.graphics.setFont(Game.font14)
 Timer = require "lib.timer"	-- Timer (might be used in minigames)

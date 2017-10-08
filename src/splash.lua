@@ -26,9 +26,13 @@ function splash:draw()
 	love.graphics.setBackgroundColor(170, 170, 170)
 	love.graphics.setColor(255, 255, 255)
 	local s = math.min(Game.original.w/self.love:getWidth(), Game.original.h/self.love:getHeight())
-	love.graphics.draw(self.love, Game.original.w/2, Game.original.h/2 - 40, 0, s, s, self.love:getWidth()/2, self.love:getHeight()/2)
-	love.graphics.draw(self.piskel, 40, Game.original.h/2 + s * (self.love:getHeight()/2) - 10)
-	love.graphics.draw(self.gimp, 250, Game.original.h/2 + s * (self.love:getHeight()/2) - 30, 0, 0.4, 0.4)
+	love.graphics.draw(self.love, Game.original.w/2, Game.original.h/2 - 70, 0, s, s, self.love:getWidth()/2, self.love:getHeight()/2)
+	love.graphics.draw(self.piskel, 40, Game.original.h/2 + s * (self.love:getHeight()/2) - 40)
+	love.graphics.draw(self.gimp, 250, Game.original.h/2 + s * (self.love:getHeight()/2) - 70, 0, 0.4, 0.4)
+	love.graphics.setFont(Game.font14)
+	local t = "SFX made with BFXR. Music from Incompetech."
+	love.graphics.setColor(50, 50, 50)
+	love.graphics.print(t, Game.original.w/2 - Game.font14:getWidth(t)/2, Game.original.h - 20)
 	postDraw()
 end
 
