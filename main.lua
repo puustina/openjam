@@ -49,7 +49,8 @@ Game = {
 		--"WalkTheDog",
 		"FaceSlap",
 		"BeachWalk",
-		"ShitPants"
+		"ShitPants",
+		"HighFive"
 	},
 	fadeDuration = 0.5
 }
