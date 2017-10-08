@@ -18,7 +18,9 @@ local shitPants = {
 	poopUrgeMax = 100,
 	poopMeter = 0,
 	poopMeterDir = 1,
-	poopMeterSpeed = 60
+	poopMeterSpeed = 50,
+	fail = love.graphics.newImage("assets/skidMarks/fail.png"),
+	win = love.graphics.newImage("assets/skidMarks/win.png")
 }
 
 function shitPants:init()
@@ -33,6 +35,7 @@ function shitPants:entering()
 	self.poopMeter = 0
 	self.poopMeterDir = 1
 	self.over = false
+	self.alpha = 0
 end
 
 function shitPants:entered()
@@ -50,6 +53,7 @@ function shitPants:update(dt)
 	if not self.hold and self.poopMeter > (self.poopUrgeMax - self.poopUrgeCur) then
 		self.over = true
 		Game.result = "LOSE"
+		self.timer:tween(0.25, self, { alpha = 255 }, "linear")
 		self.timer:add(2, function() Venus.switch(results) end)
 		return
 	end
@@ -67,7 +71,8 @@ function shitPants:update(dt)
 		if self.poopUrgeCur >= self.poopUrgeMax then
 			self.over = true
 			Game.result = "LOSE"
-			self.timer:add(1, function() Venus.switch(results) end)
+			self.timer:tween(0.25, self, { alpha = 255 }, "linear")
+			self.timer:add(2, function() Venus.switch(results) end)
 		end
 		self.poopMeter = self.poopMeter - (self.poopMeter - self.poopUrgeMax)
 		self.poopMeterDir = -self.poopMeterDir
@@ -87,18 +92,33 @@ function shitPants:draw()
 	love.graphics.setColor(212, 198, 81)
 	love.graphics.rectangle("fill", 0, 0, Game.original.w, wall * Game.original.h)
 	-- door
-	love.graphics.setColor(237, 235, 219)
 	local w = 80 * scale
 	local h = 150 * scale
+	if not self.over then
+		love.graphics.setColor(237, 235, 219)
+	elseif Game.result == "WIN" then
+		love.graphics.setColor(1, 1, 1, 0)
+		love.graphics.setBlendMode("multiply")
+		love.graphics.rectangle("fill", Game.original.w/2 - w/2, wall * Game.original.h - h, w, h)
+		love.graphics.setBlendMode("alpha")
+		love.graphics.setColor(237, 235, 219)
+		love.graphics.rectangle("fill", Game.original.w/2 - 1.5 * w, wall * Game.original.h - h, w, h)
+		love.graphics.setColor(158, 188, 181)
+	end
 	love.graphics.rectangle("fill", Game.original.w/2 - w/2, wall * Game.original.h - h, w, h)
 	-- handle
-	love.graphics.setColor(82, 82, 82)
-	love.graphics.rectangle("fill", Game.original.w/2 + w/4, wall * Game.original.h - h/2, 10 * scale, 5 * scale)
-	-- sign
-	love.graphics.setColor(10, 10, 10)
-	love.graphics.setFont(Game.font14)
-	love.graphics.print("WC", math.floor(Game.original.w/2), math.floor(wall * Game.original.h - 0.75 * h), 0, 
-		scale, scale, Game.font14:getWidth("WC")/2, Game.font14:getHeight()/2)
+	if not self.over then
+		love.graphics.setColor(82, 82, 82)
+		love.graphics.rectangle("fill", Game.original.w/2 + w/4, wall * Game.original.h - h/2, 10 * scale, 5 * scale)
+		-- sign
+		love.graphics.setColor(10, 10, 10)
+		love.graphics.setFont(Game.font14)
+		love.graphics.print("WC", math.floor(Game.original.w/2), math.floor(wall * Game.original.h - 0.75 * h), 0, 
+			scale, scale, Game.font14:getWidth("WC")/2, Game.font14:getHeight()/2)
+	elseif Game.result == "WIN" then
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.draw(self.win)	
+	end
 	-- floor
 	love.graphics.setColor(189, 184, 140)
 	love.graphics.rectangle("fill", 0, wall * Game.original.h, Game.original.w, floor * Game.original.h)
@@ -124,7 +144,14 @@ function shitPants:draw()
 		local y = Game.original.h * (wall + floor * math.pow(i/limit, 2))
 		love.graphics.line(0, y, Game.original.w, y)
 	end
+
+	if Game.result == "LOSE" then
+		love.graphics.setColor(255, 255, 255, self.alpha)
+		love.graphics.draw(self.fail)
+	end
+
 	-- UI
+	love.graphics.setColor(50, 50, 50)
 	love.graphics.rectangle("fill", 0, Game.original.h - 10, Game.original.w * (1 - self.poopUrgeCur/self.poopUrgeMax), 10)
 	love.graphics.setColor(200, 0, 0)
 	if self.hold then
