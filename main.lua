@@ -1,5 +1,6 @@
 -- Global variables:
 require "controls"
+require "lib.slam"
 
 drawMinigameInfo = function(index, bg, fg)
 	local mg = Game.minigames[Game.minigameNames[index] ]
