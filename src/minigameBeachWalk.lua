@@ -18,7 +18,8 @@ local beachWalk = {
 	sand = love.graphics.newImage("assets/beachWalk/sand.png"),
 	footImg = love.graphics.newImage("assets/beachWalk/foot.png"), 
 	clamImg = love.graphics.newImage("assets/beachWalk/clam.png"),
-	clamAnim = anim8.newAnimation(anim8.newGrid(32, 32, 4*32, 32)('1-4', 1, '3-2', 1), 0.3)
+	clamAnim = anim8.newAnimation(anim8.newGrid(32, 32, 4*32, 32)('1-4', 1, '3-2', 1), 0.3),
+	fail = love.graphics.newImage("assets/beachWalk/fail.png")
 }
 
 local bindings = {
@@ -74,7 +75,8 @@ function beachWalk:entering()
 	end
 end
 
-function beachWalk:entered()
+function beachWalk:left()
+	self.timer:clear()
 end
 
 function beachWalk:update(dt)
@@ -154,7 +156,7 @@ function beachWalk:update(dt)
 		if #self.seaShells == 0 then
 			self.over = true
 			Game.result = "WIN"
-			self.timer:add(2, function() Venus.switch(results) end)
+			self.timer:add(1, function() Venus.switch(results) end)
 			return -- can't lose anymore
 		end
 
@@ -165,6 +167,14 @@ function beachWalk:update(dt)
 			(d == -1 and collides(s[1], s[2], r, llS[1], llS[2], r)) then
 				self.over = true
 				Game.result = "LOSE"
+				local removeStep = function()
+					if #beachWalk.player.steps == 0 then return end
+					if beachWalk.player.steps[#beachWalk.player.steps].double then
+						table.remove(beachWalk.player.steps, #beachWalk.player.steps)
+					end
+					table.remove(beachWalk.player.steps, #beachWalk.player.steps)
+				end
+				self.timer:addPeriodic(1/#self.player.steps, removeStep)
 				self.timer:add(1, function() Venus.switch(results) end)
 				return
 			end
@@ -200,6 +210,18 @@ function beachWalk:draw()
 	for i, j in ipairs(self.seaShells) do
 		love.graphics.setColor(255, 255, 255)
 		self.clamAnim:draw(self.clamImg, j.x, j.y, 0, 1, 1, self.shellR, self.shellR)
+	end
+
+	if Game.result == "WIN" then
+		love.graphics.setColor(255, 255, 255, 100)
+		local x = self.player.x + self.player.r * math.cos(self.player.angle)
+		local y = self.player.y + self.player.r * math.sin(self.player.angle)
+		love.graphics.draw(self.fail, x, y, self.player.angle + math.pi/2, 1, 1, self.fail:getWidth()/2, self.fail:getHeight())
+		-- lazy hack
+		love.graphics.draw(self.fail, x + Game.original.w, y, self.player.angle + math.pi/2, 1, 1, self.fail:getWidth()/2, self.fail:getHeight())
+		love.graphics.draw(self.fail, x - Game.original.w, y, self.player.angle + math.pi/2, 1, 1, self.fail:getWidth()/2, self.fail:getHeight())
+		love.graphics.draw(self.fail, x, y + Game.original.h, self.player.angle + math.pi/2, 1, 1, self.fail:getWidth()/2, self.fail:getHeight())
+		love.graphics.draw(self.fail, x, y - Game.original.h, self.player.angle + math.pi/2, 1, 1, self.fail:getWidth()/2, self.fail:getHeight())
 	end
 
 	if not countdown:over() then countdown:draw() end
