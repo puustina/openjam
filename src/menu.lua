@@ -25,7 +25,7 @@ local triangles = {
 	LEFT = love.graphics.newMesh({ { 5, -5 }, { 5, 5 }, { -5, 0 } }),
 	RIGHT = love.graphics.newMesh({ { -5, 5 }, { -5, -5 }, { 5, 0 } })
 }
-local drawInstructions = function(inst, menuLVL)
+local drawInstructions = function(inst, menuLVL, noC)
 	local margin = menuLVL and 5 + (menuLVL + 1) * 10 or 0
 	for i, j in pairs(inst) do
 		local trianglePos = {
@@ -64,7 +64,7 @@ local drawInstructions = function(inst, menuLVL)
 				Game.original.h/2 - Game.font14:getHeight()/2
 			}
 		}
-		love.graphics.setColor(colorAtMenuLVL[menuLVL])
+		if not noC then love.graphics.setColor(colorAtMenuLVL[menuLVL]) end
 		love.graphics.setFont(Game.font14)
 		love.graphics.print(j, math.floor(textPos[i][1]), math.floor(textPos[i][2]))
 		love.graphics.draw(triangles[i], trianglePos[i][1], trianglePos[i][2])
@@ -88,17 +88,20 @@ local menu = {
 		[-3] = { -- secret
 			origPos = UP,
 			pos = UP,
+			face = {},
 			draw = function(self, menu)
 				lvl1MenuBG()
-				love.graphics.setColor(colorAtMenuLVL[1])
-				love.graphics.setFont(Game.font40)
-				printCenter("Secret found!")
+				love.graphics.setColor(255, 255, 255)
+				for i, j in ipairs(self.face) do
+					love.graphics.draw(j, Game.original.w/2 - j:getWidth()/2, 30)
+				end
+				love.graphics.setColor(30, 30, 30)
+				love.graphics.setFont(Game.font20)
 				love.graphics.push()
-				love.graphics.translate(0, 40)
-				love.graphics.setFont(Game.font14)
-				printCenter("Didn't have time to implement anything here :(")
+				love.graphics.translate(0, -127)
+				printCenter("Secret found!")
 				love.graphics.pop()
-				drawInstructions({ DOWN = "Back" }, 1)
+				drawInstructions({ DOWN = "Back" }, 1, true)
 			end
 		},
 		[-2] = { -- freeplay game speed
@@ -275,8 +278,17 @@ function menu:init()
 end
 
 function menu:entering()
-	self.screen = 0
 	self.timer:clear()
+	self.structure[-3].face = {
+		Game.face.base
+	}
+	local order = { "", "hat", "eyes", "mouth", "nose" }
+	for i = 2, 5 do
+		self.structure[-3].face[i] = Game.face[order[i] ][math.random(1, 4)]
+		self.timer:addPeriodic(0.25 + 0.5 * math.random(), function() menu.structure[-3].face[i] = 
+			Game.face[order[i] ][math.random(1, 4)] end)
+	end
+	self.screen = 0
 	for i = -3, 3 do
 		self.structure[i].pos = self.structure[i].origPos
 	end

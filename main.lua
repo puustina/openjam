@@ -66,6 +66,23 @@ function love.load()
 	for i, j in ipairs(Game.minigameNames) do
 		Game.minigames[j] = require ("src.minigame"..j)
 	end
+	Game.face = {
+		base = love.graphics.newImage("assets/faceSlap/template.png")
+	}
+
+	local facePartNames = {
+		"nose",
+		"mouth",
+		"hat",
+		"eyes"
+	}
+
+	for i, j in pairs(facePartNames) do
+		Game.face[j] = {}
+		for k = 1, 4 do 
+			Game.face[j][k] = love.graphics.newImage("assets/faceSlap/" .. j .. k .. ".png")
+		end
+	end
 	Venus.registerEvents()
 	Venus.switch(splash)
 end

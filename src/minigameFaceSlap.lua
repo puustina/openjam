@@ -31,21 +31,6 @@ local bindings = {
 
 function faceSlap:init()
 	self.timer = Timer.new()
-	local facePartNames = {
-		"nose",
-		"mouth",
-		"hat",
-		"eyes"
-	}
-	self.face = {
-		base = love.graphics.newImage("assets/faceSlap/template.png")
-	}
-	for i, j in pairs(facePartNames) do
-		self.face[j] = {}
-		for k = 1, 4 do 
-			self.face[j][k] = love.graphics.newImage("assets/faceSlap/" .. j .. k .. ".png")
-		end
-	end
 end
 
 function faceSlap:entering()
@@ -58,12 +43,12 @@ function faceSlap:entering()
 	self.slapTimer = { 0, 0 }
 	countdown:reset()
 	countdown:start()
-	self.face.cur = {
-		self.face.base,
-		self.face.hat[math.random(1, 3)],
-		self.face.eyes[math.random(1, 3)],
-		self.face.mouth[math.random(1, 3)],
-		self.face.nose[math.random(1, 3)]
+	self.faceCur = {
+		Game.face.base,
+		Game.face.hat[math.random(1, 4)],
+		Game.face.eyes[math.random(1, 4)],
+		Game.face.mouth[math.random(1, 4)],
+		Game.face.nose[math.random(1, 4)]
 	}
 end
 
@@ -112,7 +97,7 @@ function faceSlap:draw()
 	preDraw()
 	love.graphics.setBackgroundColor(30, 30, 30)
 	love.graphics.setColor(255, 255, 255)
-	for i, j in ipairs(self.face.cur) do
+	for i, j in ipairs(self.faceCur) do
 		love.graphics.draw(j, Game.original.w/2 - j:getWidth()/2, 30 + self.pos)
 	end
 	for i = 1, 2 do
