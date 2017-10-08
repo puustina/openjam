@@ -118,7 +118,7 @@ function faceSlap:draw()
 	for i = 1, 2 do
 		local s = self.slapsCurrent[i]/self.slapsNeeded[i]
 		love.graphics.setColor(150, 25, 25, 222 * s)
-		love.graphics.circle("fill", Game.original.w/2 + (i == 1 and -70 or 70), Game.original.h/2 + 60 + self.pos, 25 * (1 + s))
+		love.graphics.circle("fill", Game.original.w/2 + (i == 1 and -70 or 70), Game.original.h/2 + 60 + self.pos, 15 * (1 + s))
 	end
 	if Game.result == "LOSE" then
 		love.graphics.setColor(255, 255, 255)
