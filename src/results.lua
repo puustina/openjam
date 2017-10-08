@@ -59,10 +59,14 @@ end
 
 function results:draw()
 	preDraw()
-	love.graphics.setBackgroundColor(0, 0, 0)
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.print(Game.result, 100, 100)
-	if Game.mode == "END" then
+	love.graphics.setBackgroundColor(30, 30, 30)
+	love.graphics.setColor(170, 170, 170)
+	local resultNiceText = Game.result == "WIN" and "Minigame won" or "Minigame lost"
+	if Game.mode == "FP" then
+		love.graphics.setFont(Game.font40)
+		love.graphics.print(resultNiceText, Game.original.w/2 - Game.font40:getWidth(resultNiceText)/2,
+			Game.original.h/2 - Game.font40:getHeight()/2)
+	else
 		love.graphics.print(Game.minigamesWon, 110, 120)
 		love.graphics.print(Game.curLives, 110, 140)
 		love.graphics.print(Game.speed, 110, 160)

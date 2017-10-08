@@ -21,6 +21,7 @@ local cavePainting = {
 		fail = love.graphics.newImage("assets/cavePainting/fail.png")
 	}
 }
+
 cavePainting.PAINTINGS[1].anim = anim8.newAnimation(anim8.newGrid(32, 32, 4*32, 32)('1-4', 1, '3-2', 1), 0.2)
 cavePainting.PAINTINGS[2].anim = anim8.newAnimation(anim8.newGrid(64, 64, 5*64, 64)('1-5', 1, '4-2', 1), 0.15)
 cavePainting.PAINTINGS[3].anim = anim8.newAnimation(anim8.newGrid(128, 128, 5*128, 128)('1-5', 1, '4-2', 1), 0.3)

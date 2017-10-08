@@ -93,6 +93,11 @@ local menu = {
 				love.graphics.setColor(colorAtMenuLVL[1])
 				love.graphics.setFont(Game.font40)
 				printCenter("Secret found!")
+				love.graphics.push()
+				love.graphics.translate(0, 40)
+				love.graphics.setFont(Game.font14)
+				printCenter("Didn't have time to implement anything here :(")
+				love.graphics.pop()
 				drawInstructions({ DOWN = "Back" }, 1)
 			end
 		},
@@ -293,7 +298,7 @@ function menu:update(dt)
 end
 
 function menu:draw()
-	love.graphics.setBackgroundColor(20, 20, 20)
+	love.graphics.setBackgroundColor(30, 30, 30)
 	preDraw()
 	local drawScreen = function(scr, trY)
 		if (math.abs(scr.pos - scr.origPos) > 0.01) or (scr.origPos == SHOW) then

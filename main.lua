@@ -53,10 +53,7 @@ Game = {
 	},
 	fadeDuration = 0.5
 }
-Game.font14:setFilter("nearest", "nearest", 0)
-Game.font40:setFilter("nearest", "nearest", 0)
 love.graphics.setFont(Game.font14)
-Game.font70:setFilter("nearest", "nearest", 0)
 Timer = require "lib.timer"	-- Timer (might be used in minigames)
 Venus = require "lib.venus"	-- Minigames & menu need to access this
 Venus.duration = Game.fadeDuration
@@ -64,6 +61,7 @@ Venus.duration = Game.fadeDuration
 local splash = require "src.splash"
 
 function love.load()
+	love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
 	Game.minigames = {}
 	for i, j in ipairs(Game.minigameNames) do
 		Game.minigames[j] = require ("src.minigame"..j)
