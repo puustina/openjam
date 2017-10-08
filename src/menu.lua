@@ -77,6 +77,12 @@ local printCenter = function(text, digits)
 	love.graphics.print(text, Game.original.w/2 - love.graphics.getFont():getWidth(text)/2, 
 		Game.original.h/2 - love.graphics.getFont():getHeight()/2)
 end
+local voidHandle = function(menu, index)
+	if menu.structure[index].handle then
+		menu.timer:cancel(menu.structure[index].handle)
+		menu.structure[index].handle = nil
+	end
+end
 local menu = {
 	structure = {
 		[-3] = { -- secret
@@ -174,9 +180,13 @@ local bindingsEvent = {
 			Venus.switch(Game.minigames[Game.minigameNames[menu.structure[-1].index] ])
 		else
 			if (menu.screen > 0) then
-				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
+				voidHandle(menu, menu.screen)
+				menu.structure[menu.screen].handle = 
+					menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
 			end
-			menu.timer:tween(DELAY, menu.structure[menu.screen - 1], { pos = SHOW }, "in-out-quad")
+			voidHandle(menu, menu.screen - 1)
+			menu.structure[menu.screen - 1].handle =
+				menu.timer:tween(DELAY, menu.structure[menu.screen - 1], { pos = SHOW }, "in-out-quad")
 		end
 		menu.screen = math.max(-2, menu.screen - 1)
 	end,
@@ -191,17 +201,25 @@ local bindingsEvent = {
 			Venus.switch(gameRoulette)
 		else
 			if (menu.screen < 0) then 
-				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
+				voidHandle(menu, menu.screen)
+				menu.structure[menu.screen].handle =
+					menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
 			end
-			menu.timer:tween(DELAY, menu.structure[menu.screen + 1], { pos = SHOW }, "in-out-quad")
+			voidHandle(menu, menu.screen + 1)
+			menu.structure[menu.screen + 1].handle =
+				menu.timer:tween(DELAY, menu.structure[menu.screen + 1], { pos = SHOW }, "in-out-quad")
 		end
 		menu.screen = math.min(2, menu.screen + 1)
 	end,
 	UP = function(menu)
 		if (menu.screen == 0 or menu.screen == 3) then
-			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
+			voidHandle(menu, menu.screen)
+			menu.structure[menu.screen].handle = 
+				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
 			menu.screen = menu.screen - 3
-			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
+			voidHandle(menu, menu.screen)
+			menu.structure[menu.screen].handle =
+				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
 		elseif (menu.screen == 1) then
 			local l = menu.structure[menu.screen].lives
 			menu.structure[menu.screen].lives = l + 1
@@ -213,9 +231,13 @@ local bindingsEvent = {
 	end,
 	DOWN = function(menu)
 		if (menu.screen == 0 or menu.screen == -3) then
-			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
+			voidHandle(menu, menu.screen)
+			menu.structure[menu.screen].handle = 
+				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
 			menu.screen = menu.screen + 3
-			menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
+			voidHandle(menu, menu.screen)
+			menu.structure[menu.screen].handle = 
+				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
 		elseif (menu.screen == 3) then
 			love.event.quit()
 		elseif (menu.screen == 1) then
@@ -249,6 +271,7 @@ end
 
 function menu:entering()
 	self.screen = 0
+	self.timer:clear()
 	for i = -3, 3 do
 		self.structure[i].pos = self.structure[i].origPos
 	end
