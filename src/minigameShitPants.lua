@@ -18,7 +18,7 @@ local shitPants = {
 	poopUrgeMax = 100,
 	poopMeter = 0,
 	poopMeterDir = 1,
-	poopMeterSpeed = 33
+	poopMeterSpeed = 60
 }
 
 function shitPants:init()
@@ -127,6 +127,9 @@ function shitPants:draw()
 	-- UI
 	love.graphics.rectangle("fill", 0, Game.original.h - 10, Game.original.w * (1 - self.poopUrgeCur/self.poopUrgeMax), 10)
 	love.graphics.setColor(200, 0, 0)
+	if self.hold then
+		love.graphics.setColor(0, 200, 0)
+	end
 	love.graphics.rectangle("fill", Game.original.w * (1 - self.poopUrgeCur/self.poopUrgeMax), 
 		Game.original.h - 10, Game.original.w * (self.poopUrgeCur/self.poopUrgeMax), 10)
 	love.graphics.setLineWidth(5)
