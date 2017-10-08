@@ -167,6 +167,7 @@ local bindingsEvent = {
 		if menu.screen - 1 < -2 then 
 			Game.mode = "FP"
 			Game.speed = menu.structure[-2].speed
+			Venus.duration = (1/Game.speed) * Game.fadeDuration
 			Venus.switch(Game.minigames[Game.minigameNames[menu.structure[-1].index] ])
 		else
 			if (menu.screen > 0) then
@@ -181,6 +182,7 @@ local bindingsEvent = {
 		if menu.screen + 1 > 2 then 
 			Game.mode = "END"
 			Game.speed = menu.structure[2].speed
+			Venus.duration = (1/Game.speed) * Game.fadeDuration
 			Game.maxLives = menu.structure[1].lives
 			Game.curLives = Game.maxLives
 			Venus.switch(gameRoulette)

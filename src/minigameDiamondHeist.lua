@@ -61,7 +61,7 @@ local bindings = {
 }
 
 function diamondHeist:init()
-	self.holeRadius = 90
+	self.holeRadius = 100 - 7 * (1/Game.speed)
 	self.timer = Timer.new()
 end
 
@@ -77,8 +77,8 @@ function diamondHeist:entering()
 		y = Game.original.h/2,
 		z = 0,
 		radius = 64,
-		speed = 100,
-		zSpeed = 3,
+		speed = 100 * (1 + 0.5 * Game.speed),
+		zSpeed = 2 * (1 + 0.5 * Game.speed),
 		img = love.graphics.newImage("assets/diamondHeist/hand.png"),
 		anim = anim8.newAnimation(anim8.newGrid(128, 128, 4*128, 128)('1-4', 1), 0.2)
 	}
@@ -88,7 +88,7 @@ function diamondHeist:entering()
 		self.glassPanes[#self.glassPanes + 1] = {
 			x = math.random(self.holeRadius, Game.original.w - self.holeRadius),
 			y = math.random(self.holeRadius, Game.original.h - self.holeRadius),
-			z = 7 + i * 6
+			z = 6 + i * 6
 		}
 	end
 end
@@ -126,8 +126,8 @@ function diamondHeist:update(dt)
 			Game.result = "LOSE"
 			self.hand.z = pane.z - 0.01
 			self.over = true
-			self.timer:add(2, function() Venus.switch(results) end)
-			self.timer:addPeriodic(0.5, function() diamondHeist.curLight = -diamondHeist.curLight end)
+			self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
+			self.timer:addPeriodic(0.33, function() diamondHeist.curLight = -diamondHeist.curLight end)
 		end
 
 		self.nextRing = self.nextRing + 1
@@ -135,7 +135,7 @@ function diamondHeist:update(dt)
 			Game.result = "WIN"
 			self.hand.z = pane.z - 0.01
 			self.over = true
-			self.timer:add(1, function() Venus.switch(results) end)
+			self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 		end
 	end
 end

@@ -11,8 +11,8 @@ local beachWalk = {
 	over = false,
 	player = nil,
 	seaShells = {},
-	playerSpeed = 48,
-	playerTurnSpeed = math.pi,
+	playerSpeedOrig = 48,
+	playerTurnSpeedOrig = math.pi,
 	seaShellCount = 7,
 	shellR = 16,
 	sand = love.graphics.newImage("assets/beachWalk/sand.png"),
@@ -36,6 +36,8 @@ function beachWalk:init()
 end
 
 function beachWalk:entering()
+	self.playerSpeed = Game.speed * self.playerSpeedOrig
+	self.playerTurnSpeed = self.playerTurnSpeedOrig
 	countdown:reset()
 	countdown:start()
 	self.over = false
@@ -156,7 +158,7 @@ function beachWalk:update(dt)
 		if #self.seaShells == 0 then
 			self.over = true
 			Game.result = "WIN"
-			self.timer:add(1, function() Venus.switch(results) end)
+			self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 			return -- can't lose anymore
 		end
 
@@ -174,8 +176,8 @@ function beachWalk:update(dt)
 					end
 					table.remove(beachWalk.player.steps, #beachWalk.player.steps)
 				end
-				self.timer:addPeriodic(1/#self.player.steps, removeStep)
-				self.timer:add(1, function() Venus.switch(results) end)
+				self.timer:addPeriodic((2 * (1/Game.speed))/#self.player.steps, removeStep)
+				self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 				return
 			end
 		end

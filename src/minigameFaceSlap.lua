@@ -7,9 +7,9 @@ local faceSlap = {
 	controls = "LEFT RIGHT",
 	thumbnail = nil,
 	-- game specific
-	maxTime = 5,
+	maxTimeOrig = 5,
 	timeLeft = 5,
-	slapsNeeded = { 15, 15 },
+	slapsNeeded = { 10, 10 },
 	slapsCurrent = { 0, 0 }
 }
 
@@ -44,6 +44,7 @@ end
 
 function faceSlap:entering()
 	self.over = false
+	self.maxTime = (1/Game.speed) * self.maxTimeOrig
 	self.timeLeft = self.maxTime
 	self.slapsCurrent = { 0, 0 }
 	countdown:reset()

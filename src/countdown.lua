@@ -8,7 +8,7 @@ local countdown = {
 
 function countdown:reset()
 	self.index = 1
-	self.timerCur = self.timerMax
+	self.timerCur = self.timerMax * (1/Game.speed)
 end
 
 function countdown:start()
@@ -22,7 +22,7 @@ end
 function countdown:update(dt)
 	self.timerCur = self.timerCur - dt
 	if (self.timerCur < 0) then
-		self.timerCur = self.timerMax
+		self.timerCur = self.timerMax * (1/Game.speed)
 		self.index = self.index + 1
 		if (self.index > #self.items) then
 			self.count = false

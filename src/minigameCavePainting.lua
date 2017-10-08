@@ -13,9 +13,9 @@ local cavePainting = {
 		{ r = 32, c = { 0, 100, 0 }, img = love.graphics.newImage("assets/cavePainting/fire.png") },
 		{ r = 64, c = { 0, 0, 100 }, img = love.graphics.newImage("assets/cavePainting/mammoth.png") }
 	},
-	speed = 200,
+	speedOrig = 200,
 	over = false,
-	timeLimit = 10,
+	timeLimitOrig = 10,
 	images = {
 		wall = love.graphics.newImage("assets/cavePainting/wall.png"),
 		fail = love.graphics.newImage("assets/cavePainting/fail.png")
@@ -88,16 +88,13 @@ local bindings = {
 		minigame.curPainting.index = minigame.curPainting.index + 1
 		if #minigame.wall == 0 then
 			minigame.over = true
-			local delay = 0
 			if minigame.success > 0 then
 				Game.result = "WIN"
-				delay = 2
 			else
 				Game.result = "LOSE"
-				minigame.timer:tween(2, minigame, { failPos = -Game.original.w }, "linear")
-				delay = 2
+				minigame.timer:tween(2 * (1/Game.speed), minigame, { failPos = -Game.original.w }, "linear")
 			end
-			minigame.timer:add(delay, function()
+			minigame.timer:add(2 * (1/Game.speed), function()
 				Venus.switch(results)
 			end)
 		end
@@ -111,6 +108,8 @@ end
 function cavePainting:entering()
 	countdown:reset()
 	countdown:start()
+	self.speed = self.speedOrig
+	self.timeLimit = self.timeLimitOrig - 1.5 * Game.speed
 	self.timeLeft = self.timeLimit
 	self.success = -2.5
 	self.over = false
@@ -121,9 +120,9 @@ function cavePainting:entering()
 	for i = 1, 5 do
 		local rand = math.random()
 		local index = 0
-		if rand > 0.9 then
+		if rand > 0.9 - 0.05 * Game.speed then
 			index = 3
-		elseif rand > 0.6 then
+		elseif rand > 0.6 - 0.05 * Game.speed then
 			index = 2
 		else
 			index = 1
@@ -182,8 +181,8 @@ function cavePainting:update(dt)
 		if (self.timeLeft < 0 and Game.result == "") then 
 			self.over = true
 			Game.result = "LOSE"
-			self.timer:tween(2, self, { failPos = -Game.original.w }, "linear")
-			self.timer:add(2, function() Venus.switch(results) end)
+			self.timer:tween(2 * (1/Game.speed), self, { failPos = -Game.original.w }, "linear")
+			self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 		end
 
 		for i, j in pairs(bindings) do
@@ -194,7 +193,7 @@ function cavePainting:update(dt)
 	elseif Game.result == "WIN" then
 		for i, j in pairs(self.paintWall) do
 			if j.index == 1 or j.index == 3 then
-				j.x = j.x + (50 + 10 * j.index) * dt
+				j.x = j.x + (50 * Game.speed + 10 * j.index) * dt
 			end
 		end
 	end

@@ -28,7 +28,7 @@ Game = {
 	maxLives = 3,
 	curLives = 3,
 	speed = 1,		-- speed/difficulty of minigames
-	maxSpeed = 2,
+	maxSpeed = 3,
 	minSpeed = 0.5,
 	multi = 1.1,
 	minigamesWon = 0,
@@ -50,7 +50,8 @@ Game = {
 		"FaceSlap",
 		"BeachWalk",
 		"ShitPants"
-	}
+	},
+	fadeDuration = 0.5
 }
 Game.font14:setFilter("nearest", "nearest", 0)
 Game.font40:setFilter("nearest", "nearest", 0)
@@ -58,7 +59,7 @@ love.graphics.setFont(Game.font14)
 Game.font70:setFilter("nearest", "nearest", 0)
 Timer = require "lib.timer"	-- Timer (might be used in minigames)
 Venus = require "lib.venus"	-- Minigames & menu need to access this
-Venus.duration = 0.5
+Venus.duration = Game.fadeDuration
 
 local splash = require "src.splash"
 

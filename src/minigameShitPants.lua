@@ -9,7 +9,7 @@ local shitPants = {
 	-- game specific
 	over = false,
 	pos = 0,
-	speed = 10,
+	speedOrig = 10,
 	goal = 100,
 	hold = false,
 	poopUrgeStart = 10,
@@ -18,7 +18,7 @@ local shitPants = {
 	poopUrgeMax = 100,
 	poopMeter = 0,
 	poopMeterDir = 1,
-	poopMeterSpeed = 50,
+	poopMeterSpeedOrig = 50,
 	fail = love.graphics.newImage("assets/skidMarks/fail.png"),
 	win = love.graphics.newImage("assets/skidMarks/win.png")
 }
@@ -31,9 +31,12 @@ function shitPants:entering()
 	countdown:reset()
 	countdown:start()
 	self.pos = 0
+	self.hold = false
 	self.poopUrgeCur = self.poopUrgeStart
 	self.poopMeter = 0
 	self.poopMeterDir = 1
+	self.poopMeterSpeed = self.poopMeterSpeedOrig * Game.speed
+	self.speed = self.speedOrig * Game.speed
 	self.over = false
 	self.alpha = 0
 end
@@ -53,15 +56,15 @@ function shitPants:update(dt)
 	if not self.hold and self.poopMeter > (self.poopUrgeMax - self.poopUrgeCur) then
 		self.over = true
 		Game.result = "LOSE"
-		self.timer:tween(0.25, self, { alpha = 255 }, "linear")
-		self.timer:add(2, function() Venus.switch(results) end)
+		self.timer:tween(0.25 * (1/Game.speed), self, { alpha = 255 }, "linear")
+		self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 		return
 	end
 	if not self.hold then self.pos = self.pos + self.speed * dt end
 	if self.pos >= self.goal then
 		self.over = true
 		Game.result = "WIN"
-		self.timer:add(2, function() Venus.switch(results) end)
+		self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 		return
 	end
 
@@ -71,8 +74,8 @@ function shitPants:update(dt)
 		if self.poopUrgeCur >= self.poopUrgeMax then
 			self.over = true
 			Game.result = "LOSE"
-			self.timer:tween(0.25, self, { alpha = 255 }, "linear")
-			self.timer:add(2, function() Venus.switch(results) end)
+			self.timer:tween(0.25 * (1/Game.speed), self, { alpha = 255 }, "linear")
+			self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 		end
 		self.poopMeter = self.poopMeter - (self.poopMeter - self.poopUrgeMax)
 		self.poopMeterDir = -self.poopMeterDir
@@ -94,7 +97,7 @@ function shitPants:draw()
 	-- door
 	local w = 80 * scale
 	local h = 150 * scale
-	if not self.over then
+	if not self.over or Game.result == "LOSE" then
 		love.graphics.setColor(237, 235, 219)
 	elseif Game.result == "WIN" then
 		love.graphics.setColor(1, 1, 1, 0)
@@ -107,7 +110,7 @@ function shitPants:draw()
 	end
 	love.graphics.rectangle("fill", Game.original.w/2 - w/2, wall * Game.original.h - h, w, h)
 	-- handle
-	if not self.over then
+	if not self.over or Game.result == "LOSE" then
 		love.graphics.setColor(82, 82, 82)
 		love.graphics.rectangle("fill", Game.original.w/2 + w/4, wall * Game.original.h - h/2, 10 * scale, 5 * scale)
 		-- sign

@@ -36,7 +36,7 @@ function gameRoulette:entering()
 end
 
 function gameRoulette:entered()
-	self.timer:add(3, function() Venus.switch(Game.minigames[Game.minigameNames[self.gameIndex] ]) end)
+	self.timer:add(3 * (1/Game.speed), function() Venus.switch(Game.minigames[Game.minigameNames[self.gameIndex] ]) end)
 end
 
 function gameRoulette:update(dt)
