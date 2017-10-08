@@ -4,7 +4,7 @@ local anim8 = require "lib.anim8"
 
 local diamondHeist = {
 	name = "Diamond Heist",
-	description = "Avoid glass. Grab diamond.",
+	description = "Grab diamond.",
 	controls = "UP DOWN LEFT RIGHT",
 	thumbnail = nil,
 	-- game specific

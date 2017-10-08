@@ -7,42 +7,75 @@ local DOWN = Game.original.h
 local SHOW = 0
 local DELAY = 0.15
 local lvl2MenuBG = function()
-	love.graphics.setColor(50, 50, 50, 200)
-	love.graphics.rectangle("fill", 0, 0, Game.original.w, Game.original.h)
 	love.graphics.setColor(100, 100, 100)
 	love.graphics.rectangle("fill", 20, 20, Game.original.w - 40, Game.original.h - 40)
 end
 local lvl1MenuBG = function()
-	love.graphics.setColor(50, 50, 50, 200)
-	love.graphics.rectangle("fill", 0, 0, Game.original.w, Game.original.h)
-	love.graphics.setColor(150, 150, 150)
+	love.graphics.setColor(70, 70, 70)
 	love.graphics.rectangle("fill", 10, 10, Game.original.w - 20, Game.original.h - 20)
 end
+local colorAtMenuLVL = {
+	[0] = { 170, 170, 170 },
+	{ 200, 200, 200 },
+	{ 220, 220, 220 }
+}
+local triangles = {
+	UP = love.graphics.newMesh({ { -5, 5 }, { 0, -5 }, { 5, 5 } }),
+	DOWN = love.graphics.newMesh({ { 5, -5 }, { 0, 5 }, { -5, -5 } }),
+	LEFT = love.graphics.newMesh({ { 5, -5 }, { 5, 5 }, { -5, 0 } }),
+	RIGHT = love.graphics.newMesh({ { -5, 5 }, { -5, -5 }, { 5, 0 } })
+}
 local drawInstructions = function(inst, menuLVL)
-	local margin = menuLVL and (menuLVL + 1) * 10 or 0
+	local margin = menuLVL and 5 + (menuLVL + 1) * 10 or 0
 	for i, j in pairs(inst) do
-		local pos = {
+		local trianglePos = {
 			UP = {
-				Game.original.w/2 - Game.font14:getWidth(j)/2,
+				Game.original.w/2,
 				margin
 			},
 			DOWN = {
-				Game.original.w/2 - Game.font14:getWidth(j)/2,
-				Game.original.h - margin - Game.font14:getHeight()
+				Game.original.w/2,
+				Game.original.h - margin
 			},
 			LEFT = {
 				margin,
+				Game.original.h/2
+			},
+			RIGHT = {
+				Game.original.w - margin,
+				Game.original.h/2
+			}
+		}
+		local textPos = {
+			UP = {
+				Game.original.w/2 - Game.font14:getWidth(j)/2,
+				margin + 10
+			},
+			DOWN = {
+				Game.original.w/2 - Game.font14:getWidth(j)/2,
+				Game.original.h - margin - 10 - Game.font14:getHeight()
+			},
+			LEFT = {
+				margin + 10,
 				Game.original.h/2 - Game.font14:getHeight()/2
 			},
 			RIGHT = {
-				Game.original.w - margin - Game.font14:getWidth(j),
+				Game.original.w - margin - 10 - Game.font14:getWidth(j),
 				Game.original.h/2 - Game.font14:getHeight()/2
 			}
 		}
-		love.graphics.setColor(255, 255, 255)
+		love.graphics.setColor(colorAtMenuLVL[menuLVL])
 		love.graphics.setFont(Game.font14)
-		love.graphics.print(j, math.floor(pos[i][1]), math.floor(pos[i][2]))
+		love.graphics.print(j, math.floor(textPos[i][1]), math.floor(textPos[i][2]))
+		love.graphics.draw(triangles[i], trianglePos[i][1], trianglePos[i][2])
 	end
+end
+local printCenter = function(text, digits)
+	if digits and (""..text):find("%.") then 
+		text = (""..text):sub(1, (""..text):find("%.") + 2)
+	end
+	love.graphics.print(text, Game.original.w/2 - love.graphics.getFont():getWidth(text)/2, 
+		Game.original.h/2 - love.graphics.getFont():getHeight()/2)
 end
 local menu = {
 	structure = {
@@ -64,9 +97,9 @@ local menu = {
 			draw = function(self, menu)
 				lvl2MenuBG()
 				drawInstructions({ LEFT = "Start", RIGHT = "Back", UP = "Speed UP", DOWN = "Speed DOWN" }, 2)
-				love.graphics.setFont(Game.font14)
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.print(self.speed, 10, 30)
+				love.graphics.setColor(colorAtMenuLVL[2])
+				love.graphics.setFont(Game.font70)
+				printCenter(self.speed, true)
 			end
 		},
 		[-1] = { -- freeplay minigame
@@ -76,7 +109,8 @@ local menu = {
 			draw = function(self, menu)
 				lvl1MenuBG()
 				drawInstructions({ LEFT = "Next", RIGHT = "Back", UP = "Select game", DOWN = "Select game" }, 1)
-				drawMinigameInfo(Game.minigames[Game.minigameNames[self.index] ])
+				love.graphics.setColor(colorAtMenuLVL[1])
+				drawMinigameInfo(self.index, { 100, 100, 100 }, colorAtMenuLVL[2])
 			end	
 		},
 		[0] = { -- main screen
@@ -84,6 +118,10 @@ local menu = {
 			pos = SHOW,
 			draw = function(self, menu)
 				drawInstructions({ LEFT = "Freeplay", RIGHT = "Endurance", DOWN = "Quit" }, 0)
+				love.graphics.setFont(Game.font70)
+				love.graphics.setColor(colorAtMenuLVL[0])
+				love.graphics.print("UNKO", math.floor(Game.original.w/2 - Game.font70:getWidth("UNKO")/2),
+					math.floor(Game.original.h/4 - Game.font70:getHeight()/2))
 			end
 		},
 		{ -- endurance initial lives
@@ -93,9 +131,9 @@ local menu = {
 			draw = function(self, menu)
 				lvl1MenuBG()
 				drawInstructions({ LEFT = "Back", RIGHT = "Next", UP = "Lives UP", DOWN = "Lives DOWN" }, 1)
-				love.graphics.setFont(Game.font14)
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.print(self.lives, 10, 30)
+				love.graphics.setColor(colorAtMenuLVL[1])
+				love.graphics.setFont(Game.font70)
+				printCenter(self.lives)
 			end
 		},
 		{ -- endurance initial speed
@@ -105,9 +143,9 @@ local menu = {
 			draw = function(self, menu)
 				lvl2MenuBG()
 				drawInstructions({ LEFT = "Back", RIGHT = "Start", UP = "Speed UP", DOWN = "Speed DOWN" }, 2)
-				love.graphics.setFont(Game.font14)
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.print(self.speed, 10, 30)
+				love.graphics.setColor(colorAtMenuLVL[2])
+				love.graphics.setFont(Game.font70)
+				printCenter(self.speed, true)
 			end
 		},
 		{ -- quit confirm
@@ -227,7 +265,7 @@ function menu:update(dt)
 end
 
 function menu:draw()
-	love.graphics.setBackgroundColor(0, 0, 0)
+	love.graphics.setBackgroundColor(20, 20, 20)
 	preDraw()
 	local drawScreen = function(scr, trY)
 		if (math.abs(scr.pos - scr.origPos) > 0.01) or (scr.origPos == SHOW) then

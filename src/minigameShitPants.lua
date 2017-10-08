@@ -3,7 +3,7 @@ local countdown = require "src.countdown"
 
 local shitPants = {
 	name = "Skidmarks",
-	description = "Don't poop your pants (ACTION to hold!).",
+	description = "Reach the toilet.",
 	controls = "ACTION",
 	thumbnail = nil,
 	-- game specific

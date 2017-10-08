@@ -44,7 +44,7 @@ function gameRoulette:update(dt)
 end
 
 function gameRoulette:draw()
-	drawMinigameInfo(Game.minigames[Game.minigameNames[self.gameIndex] ])
+	drawMinigameInfo(self.gameIndex)
 end
 
 return gameRoulette

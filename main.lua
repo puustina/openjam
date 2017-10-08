@@ -1,12 +1,23 @@
 -- Global variables:
 require "controls"
 
-drawMinigameInfo = function(mg)
+drawMinigameInfo = function(index, bg, fg)
+	local mg = Game.minigames[Game.minigameNames[index] ]
+	love.graphics.push()
+	local wR = 0.6
+	local hR = 0.5
+	love.graphics.translate((1 - wR) * 0.5 * Game.original.w, (1 - hR) * 0.5 * Game.original.h)
+	love.graphics.setColor(bg)
+	love.graphics.rectangle("fill", 0, 0, wR * Game.original.w, hR * Game.original.h)
+	love.graphics.setColor(fg)
+	love.graphics.setFont(Game.font20)
+	love.graphics.print(mg.name, 10, 10)
 	love.graphics.setFont(Game.font14)
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.print(mg.name, 50, 100)
-	love.graphics.print(mg.description, 60, 120)
-	love.graphics.print(mg.controls, 60, 140)
+	love.graphics.print("Instructions:", 15, 50)
+	love.graphics.print(mg.description, 25, 68)
+	love.graphics.print("Controls:", 15, 100)
+	love.graphics.print(mg.controls, 25, 118)
+	love.graphics.pop()
 end
 
 Game = {
@@ -29,6 +40,7 @@ Game = {
 		h = love.graphics.getHeight()
 	},
 	font14 = love.graphics.newFont(14),
+	font20 = love.graphics.newFont(20),
 	font40 = love.graphics.newFont(40),
 	font70 = love.graphics.newFont(70),
 	minigameNames = {

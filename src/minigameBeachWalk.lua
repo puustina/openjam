@@ -4,7 +4,7 @@ local anim8 = require "lib.anim8"
 
 local beachWalk = {
 	name = "Beach Walk",
-	description = "Collect seashells. Don't cross your own footsteps.",
+	description = "Collect the clams.",
 	controls = "LEFT RIGHT",
 	thumbnail = nil,
 	-- game specific

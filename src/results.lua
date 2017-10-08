@@ -12,8 +12,9 @@ function results:entering()
 			Game.minigameStreak = Game.minigameStreak + 1
 			Game.minigamesWon = Game.minigamesWon + 1
 			
-			if Game.minigameStreak >= 5 then
+			if Game.minigameStreak >= 3 then
 				Game.speed = math.min(Game.maxSpeed, Game.multi * Game.speed)
+				Game.minigameStreak = 0
 			end
 		else
 			Game.minigameStreak = 0
