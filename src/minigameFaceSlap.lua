@@ -11,16 +11,20 @@ local faceSlap = {
 	timeLeft = 5,
 	slapsNeeded = { 10, 10 },
 	slapsCurrent = { 0, 0 },
-	lose = love.graphics.newImage("assets/faceSlap/gloves.png")
+	lose = love.graphics.newImage("assets/faceSlap/gloves.png"),
+	playerGloveL = love.graphics.newImage("assets/faceSlap/player_glove.png")
 }
 
+local slapTime = 0.15
 local bindings = {
 	LEFT = function(minigame)
 		if not minigame.hasControl then return end
+		minigame.slapTimer[1] = slapTime
 		minigame.slapsCurrent[1] = math.min(minigame.slapsNeeded[1], minigame.slapsCurrent[1] + 1)
 	end,
 	RIGHT = function(minigame)
 		if not minigame.hasControl then return end
+		minigame.slapTimer[2] = slapTime
 		minigame.slapsCurrent[2] = math.min(minigame.slapsNeeded[2], minigame.slapsCurrent[2] + 1)
 	end
 }
@@ -51,6 +55,7 @@ function faceSlap:entering()
 	self.maxTime = (1/Game.speed) * self.maxTimeOrig
 	self.timeLeft = self.maxTime
 	self.slapsCurrent = { 0, 0 }
+	self.slapTimer = { 0, 0 }
 	countdown:reset()
 	countdown:start()
 	self.face.cur = {
@@ -90,6 +95,8 @@ function faceSlap:update(dt)
 		self.hasControl = true
 	end
 
+	self.slapTimer[1] = self.slapTimer[1] - dt
+	self.slapTimer[2] = self.slapTimer[2] - dt
 	if self.over then return end
 	self.timeLeft = self.timeLeft - dt
 	if (self.timeLeft < 0) then
@@ -113,6 +120,14 @@ function faceSlap:draw()
 		love.graphics.setFont(Game.font20)
 		love.graphics.setColor(150, 150, 150, 255 * (1 - self.pos2/Game.original.h))
 		love.graphics.print("My turn...", 20, 30)
+	end
+	for i, j in ipairs(self.slapTimer) do
+		if j > 0 then
+			local s = j/slapTime 
+			love.graphics.draw(self.playerGloveL, Game.original.w/2 + (i == 1 and -1 or 1) * 110, 
+				Game.original.h/2 + 100, 0, s * (i == 2 and -1 or 1), s, 
+				self.playerGloveL:getWidth()/2, self.playerGloveL:getHeight()/2)
+		end
 	end
 	love.graphics.setColor(50, 50, 50)
 	love.graphics.rectangle("fill", 0, 0, Game.original.w, 10)
