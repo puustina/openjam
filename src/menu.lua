@@ -84,9 +84,9 @@ local menu = {
 			pos = UP,
 			draw = function(self, menu)
 				lvl1MenuBG()
-				love.graphics.setFont(Game.font14)
-				love.graphics.setColor(255, 255, 255)
-				love.graphics.print("secret!", 10, 10)
+				love.graphics.setColor(colorAtMenuLVL[1])
+				love.graphics.setFont(Game.font40)
+				printCenter("Secret found!")
 				drawInstructions({ DOWN = "Back" }, 1)
 			end
 		},
@@ -154,6 +154,9 @@ local menu = {
 			draw = function(self, menu)
 				lvl1MenuBG()
 				drawInstructions({ DOWN = "Quit", UP = "Back" }, 1)
+				love.graphics.setColor(colorAtMenuLVL[1])
+				love.graphics.setFont(Game.font40)
+				printCenter("Had enough?")
 			end
 		}
 	},
