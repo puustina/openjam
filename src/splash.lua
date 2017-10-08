@@ -7,7 +7,7 @@ local menu = require "src.menu"
 
 function splash:init()
 	self.timer = Timer.new()
-	self.timer:add(5, function() Venus.switch(menu) end)
+	self.timer:add(3, function() Venus.switch(menu) end)
 end
 
 function splash:keypressed(key, scancode, isRepeat)
