@@ -115,12 +115,19 @@ function faceSlap:draw()
 	for i, j in ipairs(self.face.cur) do
 		love.graphics.draw(j, Game.original.w/2 - j:getWidth()/2, 30 + self.pos)
 	end
+	for i = 1, 2 do
+		local s = self.slapsCurrent[i]/self.slapsNeeded[i]
+		love.graphics.setColor(150, 25, 25, 222 * s)
+		love.graphics.circle("fill", Game.original.w/2 + (i == 1 and -70 or 70), Game.original.h/2 + 60 + self.pos, 25 * (1 + s))
+	end
 	if Game.result == "LOSE" then
+		love.graphics.setColor(255, 255, 255)
 		love.graphics.draw(self.lose, Game.original.w/2 - self.lose:getWidth()/2, 30 + self.pos2)
 		love.graphics.setFont(Game.font20)
 		love.graphics.setColor(150, 150, 150, 255 * (1 - self.pos2/Game.original.h))
 		love.graphics.print("My turn...", 20, 30)
 	end
+	love.graphics.setColor(255, 255, 255)
 	for i, j in ipairs(self.slapTimer) do
 		if j > 0 then
 			local s = j/slapTime 
