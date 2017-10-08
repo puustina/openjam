@@ -237,6 +237,9 @@ function cavePainting:draw()
 		love.graphics.setColor(0, 200, 0, 150)
 	end
 	love.graphics.rectangle("fill", Game.original.w * 0.5, 0, Game.original.w * 0.5 * (self.success/5), 10)
+	love.graphics.setColor(150, 150, 150)
+	love.graphics.setLineWidth(2)
+	love.graphics.line(Game.original.w/2, 0, Game.original.w/2, 10)
 	if not countdown:over() then countdown:draw() end
 	postDraw()
 end

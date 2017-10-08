@@ -46,7 +46,7 @@ Game = {
 	minigameNames = {
 		"DiamondHeist",
 		"CavePainting",
-		"WalkTheDog",
+		--"WalkTheDog",
 		"FaceSlap",
 		"BeachWalk",
 		"ShitPants"
