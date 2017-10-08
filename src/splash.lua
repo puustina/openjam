@@ -24,15 +24,11 @@ end
 function splash:draw()
 	preDraw()
 	love.graphics.setBackgroundColor(170, 170, 170)
-	love.graphics.setColor(30, 30, 30)
-	love.graphics.setFont(Game.font20)
-	local t = "Made with love (get it?), using"
-	love.graphics.print(t, Game.original.w/2 - Game.font20:getWidth(t)/2, 10)
 	love.graphics.setColor(255, 255, 255)
 	local s = math.min(Game.original.w/self.love:getWidth(), Game.original.h/self.love:getHeight())
-	love.graphics.draw(self.love, Game.original.w/2, Game.original.h/2 - 20, 0, s, s, self.love:getWidth()/2, self.love:getHeight()/2)
-	love.graphics.draw(self.piskel, 40, Game.original.h/2 + s * (self.love:getHeight()/2))
-	love.graphics.draw(self.gimp, 250, Game.original.h/2 + s * (self.love:getHeight()/2) - 20, 0, 0.4, 0.4)
+	love.graphics.draw(self.love, Game.original.w/2, Game.original.h/2 - 40, 0, s, s, self.love:getWidth()/2, self.love:getHeight()/2)
+	love.graphics.draw(self.piskel, 40, Game.original.h/2 + s * (self.love:getHeight()/2) - 10)
+	love.graphics.draw(self.gimp, 250, Game.original.h/2 + s * (self.love:getHeight()/2) - 30, 0, 0.4, 0.4)
 	postDraw()
 end
 

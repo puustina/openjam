@@ -52,6 +52,13 @@ function gameRoulette:draw()
 	love.graphics.setFont(Game.font40)
 	love.graphics.print(text, Game.original.w/2 - Game.font40:getWidth(text)/2, 10)
 	drawMinigameInfo(self.gameIndex, { 40, 40, 40 }, { 180, 180, 180 })
+	text = "Speed: " .. Game.speed
+	if text:find("%.") then
+		text = text:sub(1, text:find("%.") + 2)
+	end
+	love.graphics.setFont(Game.font20)
+	love.graphics.setColor(170, 170, 170)
+	love.graphics.print(text, Game.original.w/2 - Game.font20:getWidth(text)/2, 250)
 	postDraw()
 end
 

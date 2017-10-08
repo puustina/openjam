@@ -7,7 +7,7 @@ function results:init()
 end
 
 function results:entering()
-	self.delay = 2
+	self.delay = 3
 	self.lifeDown = false
 	if Game.mode == "END" then
 		if Game.result == "WIN" then
@@ -39,7 +39,7 @@ function results:entered()
 			self.timer:add(self.delay * (1/Game.speed), function() Venus.switch(gameRoulette) end)
 		else -- game over
 			Venus.duration = Game.fadeDuration
-			self.timer:add(5, function() Venus.switch(menu) end)
+			self.timer:add(10, function() Venus.switch(menu) end)
 		end
 	end
 end
@@ -67,14 +67,53 @@ function results:draw()
 		love.graphics.print(resultNiceText, Game.original.w/2 - Game.font40:getWidth(resultNiceText)/2,
 			Game.original.h/2 - Game.font40:getHeight()/2)
 	else
-		love.graphics.print(Game.minigamesWon, 110, 120)
-		love.graphics.print(Game.curLives, 110, 140)
-		love.graphics.print(Game.speed, 110, 160)
-		if Game.result == "WIN" and Game.minigameStreak == 0 then
-			love.graphics.print("SPEED UP", 110, 180)
-		elseif Game.result == "LOSE" then
-			love.graphics.print("SPEED DOWN", 110, 180)
-			love.graphics.print("LIFE DOWN", 110, 200)
+		love.graphics.setFont(Game.font40)
+		love.graphics.print(resultNiceText, Game.original.w/2 - Game.font40:getWidth(resultNiceText)/2,
+			Game.original.h/2 - Game.font40:getHeight()/2 - 80)
+		love.graphics.setFont(Game.font40)
+		local livesLeft = ""
+		for i = 1, Game.curLives do livesLeft = livesLeft .. "<3 " end 
+		for i = 1, Game.maxLives - Game.curLives do 
+			if i == 1 and Game.result == "LOSE" then
+				livesLeft = livesLeft .. "</3 "
+			else
+				livesLeft = livesLeft .. "* " 
+			end
+		end
+		love.graphics.print(livesLeft, Game.original.w/2 - Game.font40:getWidth(livesLeft)/2,
+			Game.original.h/2 - Game.font40:getHeight()/2 - 30)
+		
+		local trunc = function(nr)
+			if (""..nr):find("%.") then
+				return (""..nr):sub(1, (""..nr):find("%.") + 2)
+			else
+				return ""..nr
+			end
+		end
+		if Game.curLives == 0 then
+			love.graphics.setFont(Game.font40)
+			love.graphics.print("GAME OVER", Game.original.w/2 - Game.font40:getWidth("GAME OVER")/2,
+				Game.original.h/2 - Game.font40:getHeight()/2 + 40)
+			love.graphics.setFont(Game.font20)
+			local t1 = "Minigames beaten: " .. Game.minigamesWon
+			local t2 = "Final speed: " .. trunc(Game.speed * Game.multi)
+			love.graphics.print(t1, Game.original.w/2 - Game.font20:getWidth(t1)/2, 220)
+			love.graphics.print(t2, Game.original.w/2 - Game.font20:getWidth(t2)/2, 250)
+		else
+			local changeSpeed = function(dir)
+				love.graphics.setFont(Game.font20)
+				local text = "Speed " .. (dir == 1 and "UP: " or "DOWN: ")
+					.. (dir == 1 and trunc(Game.speed/Game.multi) or trunc(Game.speed*Game.multi))
+					.. " -> " .. trunc(Game.speed)
+				love.graphics.print(text, Game.original.w/2 - Game.font20:getWidth(text)/2,
+					Game.original.h/2 - Game.font20:getHeight()/2 + 40)
+			end
+
+			if (Game.result == "WIN" and Game.minigameStreak == 0) then
+				changeSpeed(1)
+			elseif Game.result == "LOSE" then
+				changeSpeed(-1)
+			end
 		end
 	end
 	postDraw()

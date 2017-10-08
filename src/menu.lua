@@ -227,7 +227,7 @@ local bindingsEvent = {
 				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
 		elseif (menu.screen == 1) then
 			local l = menu.structure[menu.screen].lives
-			menu.structure[menu.screen].lives = l + 1
+			menu.structure[menu.screen].lives = math.min(5, l + 1)
 		elseif (menu.screen == -1) then
 			local i = menu.structure[menu.screen].index - 1
 			if i < 1 then i = i + #Game.minigameNames end
