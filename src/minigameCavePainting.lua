@@ -17,7 +17,8 @@ local cavePainting = {
 	over = false,
 	timeLimit = 10,
 	images = {
-		wall = love.graphics.newImage("assets/cavePainting/wall.png")
+		wall = love.graphics.newImage("assets/cavePainting/wall.png"),
+		fail = love.graphics.newImage("assets/cavePainting/fail.png")
 	}
 }
 cavePainting.PAINTINGS[1].anim = anim8.newAnimation(anim8.newGrid(32, 32, 4*32, 32)('1-4', 1, '3-2', 1), 0.2)
@@ -87,8 +88,16 @@ local bindings = {
 		minigame.curPainting.index = minigame.curPainting.index + 1
 		if #minigame.wall == 0 then
 			minigame.over = true
-			minigame.timer:add(2, function()
+			local delay = 0
+			if minigame.success > 0 then
 				Game.result = "WIN"
+				delay = 2
+			else
+				Game.result = "LOSE"
+				minigame.timer:tween(2, minigame, { failPos = -Game.original.w }, "linear")
+				delay = 2
+			end
+			minigame.timer:add(delay, function()
 				Venus.switch(results)
 			end)
 		end
@@ -105,6 +114,7 @@ function cavePainting:entering()
 	self.timeLeft = self.timeLimit
 	self.success = -2.5
 	self.over = false
+	self.failPos = Game.original.w
 
 	-- Painting queue
 	self.paintings = {}
@@ -170,8 +180,10 @@ function cavePainting:update(dt)
 		self.timeLeft = self.timeLeft - dt
 
 		if (self.timeLeft < 0 and Game.result == "") then 
+			self.over = true
 			Game.result = "LOSE"
-			Venus.switch(results)
+			self.timer:tween(2, self, { failPos = -Game.original.w }, "linear")
+			self.timer:add(2, function() Venus.switch(results) end)
 		end
 
 		for i, j in pairs(bindings) do
@@ -179,7 +191,7 @@ function cavePainting:update(dt)
 				j(self, dt)
 			end
 		end
-	else
+	elseif Game.result == "WIN" then
 		for i, j in pairs(self.paintWall) do
 			if j.index == 1 or j.index == 3 then
 				j.x = j.x + (50 + 10 * j.index) * dt
@@ -211,6 +223,10 @@ function cavePainting:draw()
 		painting.anim:draw(painting.img, self.curPainting.x, self.curPainting.y, 0, 1, 1, painting.r, painting.r)
 	end
 
+	if Game.result == "LOSE" then
+		love.graphics.setColor(255, 255, 255, 200)
+		love.graphics.draw(self.images.fail, self.failPos, 0)
+	end
 	love.graphics.setColor(50, 50, 50)
 	love.graphics.rectangle("fill", 0, 0, Game.original.w, 10)
 	love.graphics.rectangle("fill", 0, Game.original.h - 10, Game.original.w, 10)

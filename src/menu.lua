@@ -110,7 +110,7 @@ local menu = {
 				lvl1MenuBG()
 				drawInstructions({ LEFT = "Next", RIGHT = "Back", UP = "Select game", DOWN = "Select game" }, 1)
 				love.graphics.setColor(colorAtMenuLVL[1])
-				drawMinigameInfo(self.index, { 100, 100, 100 }, colorAtMenuLVL[2])
+				drawMinigameInfo(self.index, { 80, 80, 80 }, colorAtMenuLVL[2])
 			end	
 		},
 		[0] = { -- main screen

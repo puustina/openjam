@@ -51,7 +51,7 @@ function gameRoulette:draw()
 	local text = "NEXT GAME"
 	love.graphics.setFont(Game.font40)
 	love.graphics.print(text, Game.original.w/2 - Game.font40:getWidth(text)/2, 10)
-	drawMinigameInfo(self.gameIndex, { 70, 70, 70 }, { 200, 200, 200 })
+	drawMinigameInfo(self.gameIndex, { 40, 40, 40 }, { 180, 180, 180 })
 	postDraw()
 end
 

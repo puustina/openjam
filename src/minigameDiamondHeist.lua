@@ -10,7 +10,22 @@ local diamondHeist = {
 	-- game specific
 	hasControl = false,
 	diamondPic = love.graphics.newImage("assets/diamondHeist/diamond.png"),
-	canvas = love.graphics.newCanvas(Game.original.w, Game.original.h)
+	canvas = love.graphics.newCanvas(Game.original.w, Game.original.h),
+	lights = {
+		[-1] = love.graphics.newMesh({
+			{ 0, 0, 0, 0, 200, 0, 0, 255 },
+			{ Game.original.w, 0, 0, 0, 0, 0, 0, 0 },
+			{ Game.original.w, Game.original.h, 0, 0, 0, 0, 0, 0 },
+			{ 0, Game.original.h, 0, 0, 200, 0, 0, 255 }
+		}),
+		[1] = love.graphics.newMesh({
+			{ 0, 0, 0, 0, 0, 0, 0, 0 },
+			{ Game.original.w, 0, 0, 0, 0, 0, 200, 255 },
+			{ Game.original.w, Game.original.h, 0, 0, 0, 0, 200, 255 },
+			{ 0, Game.original.h, 0, 0, 0, 0, 0, 0 }
+		})
+	},
+	curLight = -1
 }
 diamondHeist.diamondAnim = anim8.newAnimation(anim8.newGrid(160, 160, 7*160, 160)('1-7', 1), 0.1) 
 
@@ -78,7 +93,8 @@ function diamondHeist:entering()
 	end
 end
 
-function diamondHeist:entered()
+function diamondHeist:left()
+	self.timer:clear()
 end
 
 function diamondHeist:update(dt)	
@@ -110,7 +126,8 @@ function diamondHeist:update(dt)
 			Game.result = "LOSE"
 			self.hand.z = pane.z - 0.01
 			self.over = true
-			self.timer:add(1, function() Venus.switch(results) end)
+			self.timer:add(2, function() Venus.switch(results) end)
+			self.timer:addPeriodic(0.5, function() diamondHeist.curLight = -diamondHeist.curLight end)
 		end
 
 		self.nextRing = self.nextRing + 1
@@ -118,7 +135,7 @@ function diamondHeist:update(dt)
 			Game.result = "WIN"
 			self.hand.z = pane.z - 0.01
 			self.over = true
-			self.timer:add(2, function() Venus.switch(results) end)
+			self.timer:add(1, function() Venus.switch(results) end)
 		end
 	end
 end
@@ -172,6 +189,10 @@ function diamondHeist:draw()
 	if not self.over or Game.result == "LOSE" then
 		love.graphics.setColor(255, 255, 255, 200)
 		self.hand.anim:draw(self.hand.img, self.hand.x, self.hand.y, 0, 1, 1, self.hand.radius, self.hand.radius)
+	end
+	if Game.result == "LOSE" then
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.draw(self.lights[self.curLight])
 	end
 	if not countdown:over() then countdown:draw() end
 	postDraw()
