@@ -27,11 +27,13 @@ highFive = {
 			timerCur = 2 * (1/Game.speed)
 		}
 	end,
-	gameOver = function(self, res)
+	gameOver = function(self, res, quick)
 		self.over = true
 		Game.result = res
-		self.timer:tween(2 * (1/Game.speed), highFive, { pos = Game.original.h }, "in-out-quad")
-		self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
+		local delay = 2
+		if quick then delay = delay/4 end
+		self.timer:tween(delay * (1/Game.speed), highFive, { pos = Game.original.h }, "in-out-quad")
+		self.timer:add(delay * (1/Game.speed), function() Venus.switch(results) end)
 	end,
 	palmR = love.graphics.newImage("assets/highFive/palmR.png"),
 	handL = love.graphics.newImage("assets/highFive/handL.png")
@@ -66,10 +68,15 @@ function highFive:keypressed(key, scancode, isRepeat)
 		self.slapWait = self.maxSlapWait
 	end
 
-	if (self.target.name == "Mark") or (key == Controls["LEFT"] and self.target.hand == 1) or 
+	if (key == Controls["LEFT"] and self.target.hand == 1) or 
 		(key == Controls["RIGHT"] and self.target.hand == -1) then
 		self:gameOver("LOSE")
-	elseif self.target.name ~= "Mark" then
+	else
+		love.audio.play(Game.sources.slap)
+		if self.target.name == "Mark" then
+			self:gameOver("LOSE")
+			return
+		end
 		self.timer:add(self.maxSlapWait, function() highFive:newTarget() end)
 		self.timer:tween(self.maxSlapWait, highFive.target, { timerCur = highFive.target.timerMax })
 	end
@@ -91,7 +98,7 @@ function highFive:update(dt)
 			if self.target.name == "Mark" then
 				self:gameOver("WIN")
 			else
-				self:gameOver("LOSE")
+				self:gameOver("LOSE", true)
 			end
 		end
 	end

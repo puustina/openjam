@@ -55,9 +55,40 @@ Game = {
 	},
 	fadeDuration = 0.5,
 	sources = {
-
+		blip = love.audio.newSource("assets/audio/blip.wav", "static"),
+		errorBlip = love.audio.newSource("assets/audio/error.wav", "static"),
+		timerTick = love.audio.newSource("assets/audio/timer_tick.wav", "static"),
+		timerGo = love.audio.newSource("assets/audio/timer_go.wav", "static"),
+		selection = love.audio.newSource("assets/audio/selection.wav", "static"),
+		rolling = love.audio.newSource("assets/audio/rolling.wav", "static"),
+		rollingError = love.audio.newSource("assets/audio/rolling_error.wav", "static"),
+		jingle = love.audio.newSource("assets/audio/jingle.wav", "static"),
+		lost = love.audio.newSource("assets/audio/lost.wav", "static"),
+		menuSong = love.audio.newSource("assets/audio/IncompetechLeopardPrintElevator.mp3", "stream"),
+		punch = love.audio.newSource({ "assets/audio/punch1.wav", "assets/audio/punch2.wav" }, "static"),
+		fart = love.audio.newSource("assets/audio/fart.wav", "static"),
+		slap = love.audio.newSource("assets/audio/slap.wav", "static"),
+		alarm = love.audio.newSource("assets/audio/alarm.wav", "static"),
+		stepSand = love.audio.newSource("assets/audio/step.wav", "static"),
+		stepToilet = love.audio.newSource("assets/audio/stepToilet.wav", "static"),
+		pickUp = love.audio.newSource("assets/audio/pickup.wav", "static"),
+		pass = love.audio.newSource("assets/audio/rolling.wav", "static"),
+		paint = love.audio.newSource("assets/audio/paintOk.wav", "static")
 	}
 }
+Game.sources.rolling:setLooping(true)
+Game.sources.rollingError:setLooping(true)
+Game.sources.menuSong:setLooping(true)
+Game.sources.menuSong:addTags("song")
+Game.songs = {}
+Game.songs.menu = love.audio.play(Game.sources.menuSong)
+Game.sources.alarm:setLooping(true)
+Game.sources.stepToilet:setLooping(true)
+
+setPitch = function()
+	love.audio.tags.all.setPitch(1 + 0.1*(Game.speed - 1))
+end
+
 love.graphics.setFont(Game.font14)
 Timer = require "lib.timer"	-- Timer (might be used in minigames)
 Venus = require "lib.venus"	-- Minigames & menu need to access this
@@ -66,6 +97,7 @@ Venus.duration = Game.fadeDuration
 local splash = require "src.splash"
 
 function love.load()
+	math.randomseed(os.time())
 	love.graphics.setDefaultFilter( "nearest", "nearest", 1 )
 	Game.minigames = {}
 	for i, j in ipairs(Game.minigameNames) do
@@ -102,32 +134,40 @@ function love.keypressed(key, scancode, isRepeat)
 		if Game.paused then
 			love.event.quit()
 		end
+		love.audio.play(Game.sources.blip)	
 		Game.paused = true
 	elseif (Game.paused and key == Controls["ACTION"]) then
+		love.audio.play(Game.sources.blip)
 		Game.pauseEnd = true
 	end
 
 	if (key == "-") then
 		if love.keyboard.isDown("rctrl") or love.keyboard.isDown("lctrl") then
-			if Game.cooldown then 
+			if Game.cooldown then
 				Game.cooldown = false
 				return 
 			end
+			love.audio.play(Game.sources.blip)
 			Game.scale = math.max(1, Game.scale / 2)
 			setScale()
 		else
 			Game.volume = math.max(0, Game.volume - 0.1)
+			love.audio.tags.all.setVolume(Game.volume)
+			-- scrollSND
 		end
 	elseif (key == "+") then
 		if love.keyboard.isDown("rctrl") or love.keyboard.isDown("lctrl") then
-			if Game.cooldown then 
+			if Game.cooldown then
 				Game.cooldown = false 
 				return 
 			end
+			love.audio.play(Game.sources.blip)
 			Game.scale = math.min(3, Game.scale * 2)
 			setScale()
 		else
 			Game.volume = math.min(1, Game.volume + 0.1)
+			love.audio.tags.all.setVolume(Game.volume)
+			-- scrollSND
 		end
 	end
 end

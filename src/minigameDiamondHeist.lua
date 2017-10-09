@@ -95,6 +95,7 @@ end
 
 function diamondHeist:left()
 	self.timer:clear()
+	Game.sources.alarm:stop()
 end
 
 function diamondHeist:update(dt)	
@@ -123,6 +124,7 @@ function diamondHeist:update(dt)
 		local pane = self.glassPanes[self.nextRing]
 		if (math.sqrt(math.pow(self.hand.x - pane.x, 2) + 
 		math.pow(self.hand.y - pane.y, 2)) > maxDistanceFromCenter) then
+			love.audio.play(Game.sources.alarm)
 			Game.result = "LOSE"
 			self.hand.z = pane.z - 0.01
 			self.over = true
@@ -130,12 +132,14 @@ function diamondHeist:update(dt)
 			self.timer:addPeriodic(0.33, function() diamondHeist.curLight = -diamondHeist.curLight end)
 		end
 
+		love.audio.play(Game.sources.pass)
 		self.nextRing = self.nextRing + 1
 		if (self.nextRing > #self.glassPanes and not self.over) then
+			love.audio.play(Game.sources.pickUp)
 			Game.result = "WIN"
 			self.hand.z = pane.z - 0.01
 			self.over = true
-			self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
+			self.timer:add(1 * (1/Game.speed), function() Venus.switch(results) end)
 		end
 	end
 end

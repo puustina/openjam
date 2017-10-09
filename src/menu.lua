@@ -180,13 +180,18 @@ local menu = {
 
 local bindingsEvent = {
 	LEFT = function(menu)
-		if math.abs(menu.screen) == 3 then return end
-		if menu.screen - 1 < -2 then 
+		if math.abs(menu.screen) == 3 then 
+			return 
+		end
+		if menu.screen - 1 < -2 then
+			love.audio.play(Game.sources.selection)
 			Game.mode = "FP"
 			Game.speed = menu.structure[-2].speed
+			setPitch()
 			Venus.duration = (1/Game.speed) * Game.fadeDuration
 			Venus.switch(Game.minigames[Game.minigameNames[menu.structure[-1].index] ])
 		else
+			love.audio.play(Game.sources.blip)
 			if (menu.screen > 0) then
 				voidHandle(menu, menu.screen)
 				menu.structure[menu.screen].handle = 
@@ -199,15 +204,20 @@ local bindingsEvent = {
 		menu.screen = math.max(-2, menu.screen - 1)
 	end,
 	RIGHT = function(menu)
-		if math.abs(menu.screen) == 3 then return end
+		if math.abs(menu.screen) == 3 then 
+			return 
+		end
 		if menu.screen + 1 > 2 then 
+			love.audio.play(Game.sources.selection)
 			Game.mode = "END"
 			Game.speed = menu.structure[2].speed
+			setPitch()
 			Venus.duration = (1/Game.speed) * Game.fadeDuration
 			Game.maxLives = menu.structure[1].lives
 			Game.curLives = Game.maxLives
 			Venus.switch(gameRoulette)
 		else
+			love.audio.play(Game.sources.blip)
 			if (menu.screen < 0) then 
 				voidHandle(menu, menu.screen)
 				menu.structure[menu.screen].handle =
@@ -221,6 +231,7 @@ local bindingsEvent = {
 	end,
 	UP = function(menu)
 		if (menu.screen == 0 or menu.screen == 3) then
+			love.audio.play(Game.sources.blip)
 			voidHandle(menu, menu.screen)
 			menu.structure[menu.screen].handle = 
 				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
@@ -230,8 +241,14 @@ local bindingsEvent = {
 				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = SHOW }, "in-out-quad")
 		elseif (menu.screen == 1) then
 			local l = menu.structure[menu.screen].lives
+			if (l + 1 <= 5) then	
+				love.audio.play(Game.sources.blip)
+			else
+				love.audio.play(Game.sources.errorBlip)
+			end
 			menu.structure[menu.screen].lives = math.min(5, l + 1)
 		elseif (menu.screen == -1) then
+			love.audio.play(Game.sources.blip)
 			local i = menu.structure[menu.screen].index - 1
 			if i < 1 then i = i + #Game.minigameNames end
 			menu.structure[menu.screen].index = i
@@ -239,6 +256,7 @@ local bindingsEvent = {
 	end,
 	DOWN = function(menu)
 		if (menu.screen == 0 or menu.screen == -3) then
+			love.audio.play(Game.sources.blip)
 			voidHandle(menu, menu.screen)
 			menu.structure[menu.screen].handle = 
 				menu.timer:tween(DELAY, menu.structure[menu.screen], { pos = menu.structure[menu.screen].origPos }, "in-out-quad")
@@ -250,8 +268,14 @@ local bindingsEvent = {
 			love.event.quit()
 		elseif (menu.screen == 1) then
 			local l = menu.structure[menu.screen].lives
+			if (l - 1 >= 1) then
+				love.audio.play(Game.sources.blip)
+			else
+				love.audio.play(Game.sources.errorBlip)
+			end
 			menu.structure[menu.screen].lives = math.max(1, l - 1)
 		elseif (menu.screen == -1) then
+			love.audio.play(Game.sources.blip)
 			local i = menu.structure[menu.screen].index + 1
 			if i > #Game.minigameNames then i = i - #Game.minigameNames end
 			menu.structure[menu.screen].index = i
@@ -263,21 +287,32 @@ local bindingsUpdate = {
 	UP = function(menu, dt)
 		if (math.abs(menu.screen) == 2) then
 			local s = menu.structure[menu.screen].speed
+			
+			if s + dt < Game.maxSpeed then
+				menu.scrolled = 1
+			else
+				menu.scrolled = 2
+			end
 			menu.structure[menu.screen].speed = math.min(Game.maxSpeed, s + dt)
 		end
 	end,
 	DOWN = function(menu, dt)
 		if (math.abs(menu.screen) == 2) then
 			local s = menu.structure[menu.screen].speed
+			
+			if s - dt > Game.minSpeed then
+				menu.scrolled = 1
+			else
+				menu.scrolled = 2
+			end
 			menu.structure[menu.screen].speed = math.max(Game.minSpeed, s - dt)
 		end
 	end
 }
 
-function menu:init()
-end
-
 function menu:entering()
+	Game.speed = 1
+	setPitch()
 	self.timer:clear()
 	self.structure[-3].face = {
 		Game.face.base
@@ -304,8 +339,28 @@ end
 function menu:update(dt)
 	if Game.paused then return end
 	self.timer:update(dt)
+	self.scrolledLast = self.scrolled
+	if not self.scrolledLast then self.scrolledLast = 0 end
+	self.scrolled = 0
+	local buttons = 0
 	for i, j in pairs(bindingsUpdate) do
-		if love.keyboard.isDown(Controls[i]) then j(self, dt) end
+		if love.keyboard.isDown(Controls[i]) then 
+			buttons = buttons + 1
+			j(self, dt) 
+		end
+	end
+	if self.scrolled == 0 or buttons == 2 then
+		if self.scrolling then
+			self.scrolling:pause()
+			self.scrolling = nil
+		end
+	elseif self.scrolled == 1 and not self.scrolling then
+		self.scrolling = love.audio.play(Game.sources.rolling)
+	elseif self.scrolled == 2 and not self.scrolling then
+		self.scrolling = love.audio.play(Game.sources.rollingError)
+	elseif self.scrolledLast ~= self.scrolled then
+		self.scrolling:pause()
+		self.scrolling = (self.scrolled == 1 and love.audio.play(Game.sources.rolling) or love.audio.play(Game.sources.rollingError))
 	end
 end
 

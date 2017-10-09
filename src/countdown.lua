@@ -13,6 +13,7 @@ end
 
 function countdown:start()
 	self.count = true
+	love.audio.play(Game.sources.timerTick)
 end
 
 function countdown:over()
@@ -26,6 +27,9 @@ function countdown:update(dt)
 		self.index = self.index + 1
 		if (self.index > #self.items) then
 			self.count = false
+			love.audio.play(Game.sources.timerGo)
+		else
+			love.audio.play(Game.sources.timerTick)
 		end
 	end
 end

@@ -128,6 +128,7 @@ function beachWalk:update(dt)
 			}
 		end
 
+		love.audio.play(Game.sources.stepSand)
 		self.player.x = newX%Game.original.w
 		self.player.y = newY%Game.original.h
 		
@@ -144,6 +145,7 @@ function beachWalk:update(dt)
 			if collides(lS[1], lS[2], self.player.r,
 			j.x, j.y, self.shellR) or (d == -1 and
 			collides(llS[1], llS[2], self.player.r, j.x, j.y, self.shellR)) then
+				love.audio.play(Game.sources.selection)
 				j.kill = true
 				killTable = true
 			end

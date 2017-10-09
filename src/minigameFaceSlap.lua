@@ -19,11 +19,13 @@ local slapTime = 0.15
 local bindings = {
 	LEFT = function(minigame)
 		if not minigame.hasControl then return end
+		love.audio.play(Game.sources.punch)
 		minigame.slapTimer[1] = slapTime
 		minigame.slapsCurrent[1] = math.min(minigame.slapsNeeded[1], minigame.slapsCurrent[1] + 1)
 	end,
 	RIGHT = function(minigame)
 		if not minigame.hasControl then return end
+		love.audio.play(Game.sources.punch)
 		minigame.slapTimer[2] = slapTime
 		minigame.slapsCurrent[2] = math.min(minigame.slapsNeeded[2], minigame.slapsCurrent[2] + 1)
 	end

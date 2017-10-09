@@ -74,9 +74,11 @@ local bindings = {
 		end
 
 		if minIndex then
+			love.audio.play(Game.sources.paint)
 			minigame.success = minigame.success + 1 - minDist/(2 * minigame.PAINTINGS[p.index].r)	
 			table.remove(minigame.wall, minIndex)
 		else
+			love.audio.play(Game.sources.errorBlip)
 			minigame.success = minigame.success - 1
 			for i, j in ipairs(minigame.wall) do
 				if j.index == p.index then

@@ -30,7 +30,7 @@ function splash:draw()
 	love.graphics.draw(self.piskel, 40, Game.original.h/2 + s * (self.love:getHeight()/2) - 40)
 	love.graphics.draw(self.gimp, 250, Game.original.h/2 + s * (self.love:getHeight()/2) - 70, 0, 0.4, 0.4)
 	love.graphics.setFont(Game.font14)
-	local t = "SFX made with BFXR. Music from Incompetech."
+	local t = "SFX: Bfxr + Bosca Ceoil, Music: Incompetech"
 	love.graphics.setColor(50, 50, 50)
 	love.graphics.print(t, Game.original.w/2 - Game.font14:getWidth(t)/2, Game.original.h - 20)
 	postDraw()

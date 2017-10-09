@@ -39,23 +39,47 @@ function shitPants:entering()
 	self.speed = self.speedOrig * Game.speed
 	self.over = false
 	self.alpha = 0
+	self.audioInstance = nil
 end
 
 function shitPants:entered()
 end
 
 function shitPants:update(dt)
-	if Game.paused then return end
+	local stopAudio = function(self)
+		if self.audioInstance then
+			self.audioInstance:pause()
+			self.audioInstance = nil
+		end
+	end
+	if Game.paused then 
+		stopAudio(self)
+		return 
+	end
 	if not countdown:over() then
+		stopAudio(self)
 		countdown:update(dt)
 		return
 	end
 	self.timer:update(dt)
-	if self.over then return end
+	if self.over then 
+		stopAudio(self)
+		return 
+	end
 	self.hold = love.keyboard.isDown(Controls["ACTION"])
+
+	if not self.hold then
+		if not self.audioInstance then
+			self.audioInstance = love.audio.play(Game.sources.stepToilet)
+		end
+	else
+		stopAudio(self)
+	end
+
 	if not self.hold and self.poopMeter > (self.poopUrgeMax - self.poopUrgeCur) then
 		self.over = true
 		Game.result = "LOSE"
+		love.audio.play(Game.sources.fart)
 		self.timer:tween(0.25 * (1/Game.speed), self, { alpha = 255 }, "linear")
 		self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 		return
@@ -63,8 +87,9 @@ function shitPants:update(dt)
 	if not self.hold then self.pos = self.pos + self.speed * dt end
 	if self.pos >= self.goal then
 		self.over = true
+		love.audio.play(Game.sources.paint)
 		Game.result = "WIN"
-		self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
+		self.timer:add(1 * (1/Game.speed), function() Venus.switch(results) end)
 		return
 	end
 
@@ -74,6 +99,7 @@ function shitPants:update(dt)
 		if self.poopUrgeCur >= self.poopUrgeMax then
 			self.over = true
 			Game.result = "LOSE"
+			love.audio.play(Game.sources.fart)
 			self.timer:tween(0.25 * (1/Game.speed), self, { alpha = 255 }, "linear")
 			self.timer:add(2 * (1/Game.speed), function() Venus.switch(results) end)
 		end

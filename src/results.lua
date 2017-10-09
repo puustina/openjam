@@ -7,6 +7,24 @@ function results:init()
 end
 
 function results:entering()
+	if Game.mode == "END" and Game.result == "LOSE" and Game.curLives == 1 then
+		love.audio.tags.song.setVolume(Game.volume * 0.25)
+		love.audio.play(Game.sources.lost)
+		Timer.add(Game.sources.lost.target:getDuration()/Game.sources.lost:getPitch(),
+			function() love.audio.tags.song.setVolume(Game.volume) end)
+	end
+	--[[love.audio.tags.song.setVolume(Game.volume * 0.25)
+	local dur = 0
+	if Game.result == "WIN" then
+		love.audio.play(Game.sources.jingle)
+		dur = Game.sources.jingle.target:getDuration()/Game.sources.jingle:getPitch()
+	else
+		love.audio.play(Game.sources.lost)
+		dur = Game.sources.lost.target:getDuration()/Game.sources.lost:getPitch()
+	end
+	Timer.add(dur, function() love.audio.tags.song.setVolume(Game.volume) end)
+	]]
+
 	self.delay = 3
 	self.lifeDown = false
 	if Game.mode == "END" then
@@ -17,6 +35,7 @@ function results:entering()
 			if Game.minigameStreak >= 3 then
 				self.delay = self.delay + 1
 				Game.speed = math.min(Game.maxSpeed, Game.multi * Game.speed)
+				setPitch()
 				Venus.duration = (1/Game.speed) * Game.fadeDuration
 				Game.minigameStreak = 0
 			end
@@ -25,6 +44,7 @@ function results:entering()
 			Game.minigameStreak = 0
 			Game.curLives = Game.curLives - 1
 			Game.speed = math.max(Game.minSpeed, (1/Game.multi) * Game.speed)
+			setPitch()
 			Venus.duration = (1/Game.speed) * Game.fadeDuration
 		end
 	end
@@ -39,7 +59,7 @@ function results:entered()
 			self.timer:add(self.delay * (1/Game.speed), function() Venus.switch(gameRoulette) end)
 		else -- game over
 			Venus.duration = Game.fadeDuration
-			self.timer:add(10, function() Venus.switch(menu) end)
+			self.timer:add(7, function() Venus.switch(menu) end)
 		end
 	end
 end
