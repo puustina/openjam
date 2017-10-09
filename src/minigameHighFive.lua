@@ -10,7 +10,7 @@ highFive = {
 	-- game specific
 	over = false,
 	newTarget = function(self, first)
-		local names = { "Jack", "Steve", "Wilson", 
+		local names = { "Jack", "Steve", "Wilson", "Eric", "Laura", 
 			"James", "Stephanie", "Markus", "Margaret" }
 		if not first then names[#names + 1] = "Mark" end
 		self.target = {
@@ -59,7 +59,8 @@ function highFive:keypressed(key, scancode, isRepeat)
 	if self.over then return end
 	if not countdown:over() then return end
 	if self.slapWait > 0 then return end
-	
+	if not (key == Controls["RIGHT"] or key == Controls["LEFT"]) then return end
+
 	if key == Controls["RIGHT"] then
 		self.slapped = 1
 		self.slapWait = self.maxSlapWait
