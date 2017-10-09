@@ -39,6 +39,8 @@ function results:entering()
 				setPitch()
 				Venus.duration = (1/Game.speed) * Game.fadeDuration
 				Game.minigameStreak = 0
+			else
+				self.reallyUpdated = false
 			end
 		else
 			self.delay = self.delay + 1
@@ -118,7 +120,7 @@ function results:draw()
 				Game.original.h/2 - Game.font40:getHeight()/2 + 40)
 			love.graphics.setFont(Game.font20)
 			local t1 = "Minigames beaten: " .. Game.minigamesWon
-			local t2 = "Final speed: " .. trunc(Game.speed * Game.multi)
+			local t2 = "Final speed: " .. trunc(Game.speed * (self.reallyUpdated and Game.multi or 1))
 			love.graphics.print(t1, Game.original.w/2 - Game.font20:getWidth(t1)/2, 220)
 			love.graphics.print(t2, Game.original.w/2 - Game.font20:getWidth(t2)/2, 250)
 		else
