@@ -34,6 +34,7 @@ function results:entering()
 			
 			if Game.minigameStreak >= 3 then
 				self.delay = self.delay + 1
+				self.reallyUpdated = Game.speed ~= 3
 				Game.speed = math.min(Game.maxSpeed, Game.multi * Game.speed)
 				setPitch()
 				Venus.duration = (1/Game.speed) * Game.fadeDuration
@@ -43,6 +44,7 @@ function results:entering()
 			self.delay = self.delay + 1
 			Game.minigameStreak = 0
 			Game.curLives = Game.curLives - 1
+			self.reallyUpdated = Game.speed ~= 0.5
 			Game.speed = math.max(Game.minSpeed, (1/Game.multi) * Game.speed)
 			setPitch()
 			Venus.duration = (1/Game.speed) * Game.fadeDuration
@@ -129,10 +131,12 @@ function results:draw()
 					Game.original.h/2 - Game.font20:getHeight()/2 + 40)
 			end
 
-			if (Game.result == "WIN" and Game.minigameStreak == 0) then
-				changeSpeed(1)
-			elseif Game.result == "LOSE" then
-				changeSpeed(-1)
+			if self.reallyUpdated then
+				if Game.result == "WIN" then
+					changeSpeed(1)
+				else
+					changeSpeed(-1)
+				end
 			end
 		end
 	end
