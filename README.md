@@ -10,5 +10,6 @@ http://creativecommons.org/licenses/by/3.0/
 * Löve2D
 * Gimp
 * Piskel
+
 All other assets made by me (Anssi Puustinen).
 Code is GPLv3, other assets are CC0.
