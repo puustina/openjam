@@ -11,5 +11,5 @@ http://creativecommons.org/licenses/by/3.0/
 * Gimp
 * Piskel
 
-All other assets made by me (Anssi Puustinen).
-Code is GPLv3, other assets are CC0.
+All other assets, apart from libraries used (LÖVE + /lib) were made by me (Anssi Puustinen).
+Code is GPLv3 unless otherwise stated (LÖVE + /lib), other assets are CC0.
